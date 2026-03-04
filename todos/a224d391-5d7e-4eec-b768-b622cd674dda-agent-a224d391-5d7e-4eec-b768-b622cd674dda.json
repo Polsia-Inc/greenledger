@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Phase 1: Database schema — companies, emissions_data, reports tables",
+    "status": "completed",
+    "activeForm": "Creating database schema and migrations"
+  },
+  {
+    "content": "Phase 2: Landing page + full app UI",
+    "status": "in_progress",
+    "activeForm": "Building landing page and app interface"
+  },
+  {
+    "content": "Phase 3: Deploy, test migrations, verify end-to-end",
+    "status": "pending",
+    "activeForm": "Deploying and verifying end-to-end flow"
+  }
+]

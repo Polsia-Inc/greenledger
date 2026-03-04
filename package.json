@@ -1,5 +1,5 @@
 {
-  "name": "express-postgres-starter",
+  "name": "greenledger",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "migrate": "node migrate.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "express": "^4.18.2",
     "openai": "^4.77.0",
     "pg": "^8.11.3"

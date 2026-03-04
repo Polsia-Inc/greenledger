@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLedger — Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-deep: #0a0f0a;
+            --bg-card: #111a11;
+            --bg-subtle: #162016;
+            --green-primary: #22c55e;
+            --green-dim: #166534;
+            --green-glow: rgba(34, 197, 94, 0.15);
+            --text-primary: #f0fdf4;
+            --text-secondary: #86efac;
+            --text-muted: #6b7f6b;
+            --border: rgba(34, 197, 94, 0.12);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+
+        /* Top Nav */
+        .topnav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10,15,10,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .topnav .logo { font-family: 'Space Grotesk',sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--text-primary); text-decoration: none; }
+        .topnav .logo span { color: var(--green-primary); }
+        .topnav-right { display: flex; gap: 1rem; align-items: center; }
+        .topnav-right a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+        .topnav-right a:hover { color: var(--text-primary); }
+
+        /* Main layout */
+        .app-container { max-width: 1100px; margin: 0 auto; padding: 5rem 1.5rem 3rem; }
+
+        /* Steps */
+        .steps { display: flex; gap: 0; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .step { padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .step:hover { color: var(--text-secondary); }
+        .step.active { color: var(--green-primary); border-bottom-color: var(--green-primary); }
+        .step .num { display: inline-block; width: 22px; height: 22px; background: var(--bg-subtle); border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.75rem; margin-right: 0.4rem; }
+        .step.active .num { background: var(--green-primary); color: var(--bg-deep); }
+        .step.done .num { background: var(--green-dim); color: var(--green-primary); }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Cards */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .card p.desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        /* Form */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .form-group.full { grid-column: 1 / -1; }
+        label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        input, select, textarea {
+            background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.7rem 1rem; color: var(--text-primary); font-family: 'DM Sans',sans-serif; font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--green-primary); }
+        select { cursor: pointer; }
+        select option { background: var(--bg-deep); color: var(--text-primary); }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 10px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.2s; }
+        .btn-green { background: var(--green-primary); color: var(--bg-deep); }
+        .btn-green:hover { background: #16a34a; }
+        .btn-green:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--green-primary); background: var(--green-glow); }
+        .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.8rem; border-radius: 6px; }
+        .btn-danger { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
+        .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+        /* Data table */
+        .data-grid { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+        .data-grid th { text-align: left; padding: 0.6rem 0.75rem; color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        .data-grid td { padding: 0.6rem 0.75rem; border-bottom: 1px solid rgba(34,197,94,0.06); }
+        .data-grid tr:hover td { background: var(--green-glow); }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .badge-scope1 { background: rgba(239,68,68,0.1); color: #f87171; }
+        .badge-scope2 { background: rgba(59,130,246,0.1); color: #60a5fa; }
+        .badge-scope3 { background: rgba(245,158,11,0.1); color: #fbbf24; }
+
+        /* Metrics */
+        .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .metric-card { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; }
+        .metric-val { font-family: 'Space Grotesk',sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--green-primary); }
+        .metric-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* Report card */
+        .report-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; }
+        .report-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .report-info p { color: var(--text-muted); font-size: 0.8rem; }
+        .report-actions { display: flex; gap: 0.5rem; }
+
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+        .status-generating { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .status-completed { background: rgba(34,197,94,0.15); color: var(--green-primary); }
+        .status-failed { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+        /* Loading */
+        .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--green-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+
+        .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--bg-card); border: 1px solid var(--green-primary); border-radius: 10px; padding: 0.75rem 1.25rem; font-size: 0.9rem; z-index: 200; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .steps { overflow-x: auto; }
+            .step { white-space: nowrap; padding: 0.75rem 1rem; font-size: 0.8rem; }
+            .metrics-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/" class="logo">Green<span>Ledger</span></a>
+        <div class="topnav-right">
+            <a href="/">Home</a>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Step tabs -->
+        <div class="steps" id="steps">
+            <div class="step active" data-step="1" onclick="showStep(1)"><span class="num">1</span> Company Profile</div>
+            <div class="step" data-step="2" onclick="showStep(2)"><span class="num">2</span> Emissions Data</div>
+            <div class="step" data-step="3" onclick="showStep(3)"><span class="num">3</span> Generate Report</div>
+        </div>
+
+        <!-- Step 1: Company Profile -->
+        <div class="panel active" id="panel-1">
+            <div class="card">
+                <h2>Company Profile</h2>
+                <p class="desc">Enter your company details. This information will appear in your AASB S2 disclosure report.</p>
+                <form id="company-form" onsubmit="saveCompany(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Company Name *</label>
+                            <input type="text" id="c-name" required placeholder="e.g. Acme Manufacturing Pty Ltd">
+                        </div>
+                        <div class="form-group">
+                            <label>ABN</label>
+                            <input type="text" id="c-abn" placeholder="e.g. 12 345 678 901" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label>Industry</label>
+                            <select id="c-industry">
+                                <option value="">Select industry...</option>
+                                <option>Manufacturing</option>
+                                <option>Mining</option>
+                                <option>Construction</option>
+                                <option>Transport & Logistics</option>
+                                <option>Agriculture</option>
+                                <option>Retail</option>
+                                <option>Financial Services</option>
+                                <option>Technology</option>
+                                <option>Healthcare</option>
+                                <option>Education</option>
+                                <option>Government</option>
+                                <option>Professional Services</option>
+                                <option>Energy & Utilities</option>
+                                <option>Property & Real Estate</option>
+                                <option>Hospitality</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Financial Year *</label>
+                            <select id="c-fy" required>
+                                <option value="2025-2026">FY 2025-2026</option>
+                                <option value="2024-2025">FY 2024-2025</option>
+                                <option value="2023-2024">FY 2023-2024</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Employees</label>
+                            <input type="number" id="c-employees" placeholder="e.g. 150">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" id="c-email" placeholder="cfo@company.com.au">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Name</label>
+                            <input type="text" id="c-contact" placeholder="e.g. Jane Smith">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="c-address" placeholder="e.g. 123 Collins St, Melbourne VIC 3000">
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center;">
+                        <button type="submit" class="btn btn-green" id="save-company-btn">Save & Continue</button>
+                        <span id="company-status" style="color: var(--text-muted); font-size: 0.85rem;"></span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Existing companies -->
+            <div class="card" id="existing-companies" style="display:none;">
+                <h2>Your Companies</h2>
+                <p class="desc">Select a company to add emissions data.</p>
+                <div id="companies-list"></div>
+            </div>
+        </div>
+
+        <!-- Step 2: Emissions Data -->
+        <div class="panel" id="panel-2">
+            <div id="no-company-msg" class="card" style="display:none;">
+                <div class="empty-state">
+                    <h3>Create a company first</h3>
+                    <p>Go back to Step 1 to create your company profile.</p>
+                    <button class="btn btn-outline" style="margin-top: 1rem;" onclick="showStep(1)">Go to Step 1</button>
+                </div>
+            </div>
+
+            <div id="emissions-panel" style="display:none;">
+                <div class="metrics-row" id="scope-metrics">
+                    <div class="metric-card"><div class="metric-val" id="m-scope1">0</div><div class="metric-label">Scope 1 (tCO2e)</div></div>
+                    <div class="metric-card"><div class="metric-val" id="m-scope2">0</div><div class="metric-label">Scope 2 (tCO2e)</div></div>
+                    <div class="metric-card"><div class="metric-val" id="m-scope3">0</div><div class="metric-label">Scope 3 (tCO2e)</div></div>
+                    <div class="metric-card"><div class="metric-val" id="m-total">0</div><div class="metric-label">Total Emissions</div></div>
+                </div>
+
+                <div class="card">
+                    <h2>Add Emission Source</h2>
+                    <p class="desc">Select an emission category and source. Quantities are auto-converted to tCO2e using NGA emission factors.</p>
+                    <form id="emission-form" onsubmit="addEmission(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Scope *</label>
+                                <select id="e-category" required onchange="updateSourceTypes()">
+                                    <option value="">Select scope...</option>
+                                    <option value="scope1">Scope 1 — Direct Emissions</option>
+                                    <option value="scope2">Scope 2 — Purchased Electricity</option>
+                                    <option value="scope3">Scope 3 — Value Chain</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Source Type *</label>
+                                <select id="e-source" required>
+                                    <option value="">Select scope first...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity *</label>
+                                <input type="number" id="e-quantity" required step="any" min="0" placeholder="e.g. 25000">
+                            </div>
+                            <div class="form-group">
+                                <label>Unit</label>
+                                <input type="text" id="e-unit" readonly placeholder="Auto-filled">
+                            </div>
+                            <div class="form-group">
+                                <label>Period Start</label>
+                                <input type="date" id="e-start">
+                            </div>
+                            <div class="form-group">
+                                <label>Period End</label>
+                                <input type="date" id="e-end">
+                            </div>
+                            <div class="form-group full">
+                                <label>Description (optional)</label>
+                                <input type="text" id="e-desc" placeholder="e.g. Office electricity - Sydney HQ">
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.25rem; display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-green">Add Emission</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2>Emissions Data</h2>
+                        <button class="btn btn-green btn-sm" onclick="showStep(3)">Continue to Report &rarr;</button>
+                    </div>
+                    <div id="emissions-table-wrap">
+                        <div class="empty-state"><h3>No emissions yet</h3><p>Add your first emission source above.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Reports -->
+        <div class="panel" id="panel-3">
+            <div id="no-company-report" class="card" style="display:none;">
+                <div class="empty-state">
+                    <h3>Create a company first</h3>
+                    <p>Go back to Step 1 to create your company profile.</p>
+                    <button class="btn btn-outline" style="margin-top: 1rem;" onclick="showStep(1)">Go to Step 1</button>
+                </div>
+            </div>
+
+            <div id="reports-panel" style="display:none;">
+                <div class="card">
+                    <h2>Generate AASB S2 Report</h2>
+                    <p class="desc">AI will generate all four report sections (Governance, Strategy, Risk Management, Metrics & Targets) based on your company profile and emissions data. Takes 30-60 seconds.</p>
+                    <button class="btn btn-green" id="generate-btn" onclick="generateReport()">Generate AASB S2 Report</button>
+                    <span id="gen-status" style="margin-left: 1rem; color: var(--text-muted); font-size: 0.85rem;"></span>
+                </div>
+
+                <div class="card">
+                    <h2>Your Reports</h2>
+                    <div id="reports-list">
+                        <div class="empty-state"><h3>No reports yet</h3><p>Generate your first AASB S2 report above.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    // State
+    let currentCompany = null;
+    let emissionsData = [];
+    let sourceTypes = {};
+
+    // Init
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadSourceTypes();
+        await loadCompanies();
+    });
+
+    // Toast
+    function toast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Steps
+    function showStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+        document.getElementById(`panel-${n}`).classList.add('active');
+
+        if (n === 2) {
+            if (!currentCompany) {
+                document.getElementById('no-company-msg').style.display = 'block';
+                document.getElementById('emissions-panel').style.display = 'none';
+            } else {
+                document.getElementById('no-company-msg').style.display = 'none';
+                document.getElementById('emissions-panel').style.display = 'block';
+                loadEmissions();
+            }
+        }
+        if (n === 3) {
+            if (!currentCompany) {
+                document.getElementById('no-company-report').style.display = 'block';
+                document.getElementById('reports-panel').style.display = 'none';
+            } else {
+                document.getElementById('no-company-report').style.display = 'none';
+                document.getElementById('reports-panel').style.display = 'block';
+                loadReports();
+            }
+        }
+        // Mark previous steps done
+        for (let i = 1; i < n; i++) {
+            const s = document.querySelector(`.step[data-step="${i}"]`);
+            if (s) s.classList.add('done');
+        }
+    }
+
+    // Source types
+    async function loadSourceTypes() {
+        try {
+            const res = await fetch('/api/emission-factors');
+            const data = await res.json();
+            sourceTypes = data.sourceTypes;
+        } catch (e) { console.error('Failed to load source types', e); }
+    }
+
+    function updateSourceTypes() {
+        const cat = document.getElementById('e-category').value;
+        const sel = document.getElementById('e-source');
+        sel.innerHTML = '<option value="">Select source...</option>';
+        if (cat && sourceTypes[cat]) {
+            sourceTypes[cat].forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.key;
+                opt.textContent = `${s.description} (${s.unit})`;
+                opt.dataset.unit = s.unit;
+                sel.appendChild(opt);
+            });
+        }
+        sel.onchange = () => {
+            const opt = sel.selectedOptions[0];
+            document.getElementById('e-unit').value = opt?.dataset?.unit || '';
+        };
+    }
+
+    // Companies
+    async function loadCompanies() {
+        try {
+            const res = await fetch('/api/companies');
+            const data = await res.json();
+            const list = document.getElementById('companies-list');
+            const wrap = document.getElementById('existing-companies');
+            if (data.companies.length > 0) {
+                wrap.style.display = 'block';
+                list.innerHTML = data.companies.map(c => `
+                    <div class="report-item" style="cursor:pointer;" onclick="selectCompany(${c.id})">
+                        <div class="report-info">
+                            <h4>${esc(c.name)}</h4>
+                            <p>${c.industry || 'No industry'} | ${c.financial_year}${c.abn ? ' | ABN: '+c.abn : ''}</p>
+                        </div>
+                        <div><span class="btn btn-outline btn-sm">Select</span></div>
+                    </div>
+                `).join('');
+            }
+        } catch (e) { console.error('Failed to load companies', e); }
+    }
+
+    async function selectCompany(id) {
+        try {
+            const res = await fetch(`/api/companies/${id}`);
+            const data = await res.json();
+            currentCompany = data.company;
+            populateCompanyForm(currentCompany);
+            toast(`Selected: ${currentCompany.name}`);
+            // Mark step 1 done
+            document.querySelector('.step[data-step="1"]').classList.add('done');
+        } catch (e) { console.error('Failed to select company', e); }
+    }
+
+    function populateCompanyForm(c) {
+        document.getElementById('c-name').value = c.name || '';
+        document.getElementById('c-abn').value = c.abn || '';
+        document.getElementById('c-industry').value = c.industry || '';
+        document.getElementById('c-fy').value = c.financial_year || '2025-2026';
+        document.getElementById('c-employees').value = c.employee_count || '';
+        document.getElementById('c-email').value = c.contact_email || '';
+        document.getElementById('c-contact').value = c.contact_name || '';
+        document.getElementById('c-address').value = c.address || '';
+    }
+
+    async function saveCompany(e) {
+        e.preventDefault();
+        const btn = document.getElementById('save-company-btn');
+        const status = document.getElementById('company-status');
+        btn.disabled = true;
+        status.innerHTML = '<span class="spinner"></span> Saving...';
+
+        const body = {
+            name: document.getElementById('c-name').value,
+            abn: document.getElementById('c-abn').value,
+            industry: document.getElementById('c-industry').value,
+            financial_year: document.getElementById('c-fy').value,
+            employee_count: document.getElementById('c-employees').value ? parseInt(document.getElementById('c-employees').value) : null,
+            contact_email: document.getElementById('c-email').value,
+            contact_name: document.getElementById('c-contact').value,
+            address: document.getElementById('c-address').value,
+        };
+
+        try {
+            const res = await fetch('/api/companies', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+            const data = await res.json();
+            if (data.company) {
+                currentCompany = data.company;
+                status.textContent = 'Saved!';
+                toast('Company profile saved');
+                loadCompanies();
+                setTimeout(() => showStep(2), 500);
+            } else {
+                status.textContent = data.error || 'Error';
+            }
+        } catch (err) {
+            status.textContent = 'Failed to save';
+        }
+        btn.disabled = false;
+    }
+
+    // Emissions
+    async function loadEmissions() {
+        if (!currentCompany) return;
+        try {
+            const res = await fetch(`/api/companies/${currentCompany.id}/emissions`);
+            const data = await res.json();
+            emissionsData = data.emissions;
+            renderEmissions();
+        } catch (e) { console.error('Failed to load emissions', e); }
+    }
+
+    function renderEmissions() {
+        const wrap = document.getElementById('emissions-table-wrap');
+        if (emissionsData.length === 0) {
+            wrap.innerHTML = '<div class="empty-state"><h3>No emissions yet</h3><p>Add your first emission source above.</p></div>';
+        } else {
+            wrap.innerHTML = `<table class="data-grid">
+                <thead><tr><th>Scope</th><th>Source</th><th>Quantity</th><th>tCO2e</th><th>Period</th><th></th></tr></thead>
+                <tbody>${emissionsData.map(e => `<tr>
+                    <td><span class="badge badge-${e.category}">${e.category.replace('scope','S')}</span></td>
+                    <td>${esc(e.source_type.replace(/_/g, ' '))}</td>
+                    <td>${Number(e.quantity).toLocaleString()} ${esc(e.unit)}</td>
+                    <td style="font-weight:600;">${e.co2e_tonnes ? Number(e.co2e_tonnes).toFixed(2) : '—'}</td>
+                    <td style="color:var(--text-muted);font-size:0.8rem;">${e.period_start ? e.period_start.slice(0,10) : '—'}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteEmission(${e.id})">Remove</button></td>
+                </tr>`).join('')}</tbody>
+            </table>`;
+        }
+        // Update metrics
+        const totals = emissionsData.reduce((a, e) => {
+            const v = parseFloat(e.co2e_tonnes) || 0;
+            if (e.category === 'scope1') a.s1 += v;
+            else if (e.category === 'scope2') a.s2 += v;
+            else if (e.category === 'scope3') a.s3 += v;
+            a.t += v;
+            return a;
+        }, {s1:0,s2:0,s3:0,t:0});
+        document.getElementById('m-scope1').textContent = totals.s1.toFixed(1);
+        document.getElementById('m-scope2').textContent = totals.s2.toFixed(1);
+        document.getElementById('m-scope3').textContent = totals.s3.toFixed(1);
+        document.getElementById('m-total').textContent = totals.t.toFixed(1);
+    }
+
+    async function addEmission(e) {
+        e.preventDefault();
+        if (!currentCompany) return toast('Create a company first');
+        const body = {
+            category: document.getElementById('e-category').value,
+            source_type: document.getElementById('e-source').value,
+            quantity: parseFloat(document.getElementById('e-quantity').value),
+            unit: document.getElementById('e-unit').value,
+            period_start: document.getElementById('e-start').value || null,
+            period_end: document.getElementById('e-end').value || null,
+            description: document.getElementById('e-desc').value,
+            data_source: 'manual',
+        };
+        try {
+            const res = await fetch(`/api/companies/${currentCompany.id}/emissions`, {
+                method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.emissions) {
+                toast('Emission added');
+                document.getElementById('emission-form').reset();
+                document.getElementById('e-unit').value = '';
+                loadEmissions();
+            } else {
+                toast(data.error || 'Failed to add');
+            }
+        } catch (err) { toast('Failed to add emission'); }
+    }
+
+    async function deleteEmission(id) {
+        try {
+            await fetch(`/api/emissions/${id}`, { method: 'DELETE' });
+            toast('Removed');
+            loadEmissions();
+        } catch (e) { toast('Failed to delete'); }
+    }
+
+    // Reports
+    async function loadReports() {
+        if (!currentCompany) return;
+        try {
+            const res = await fetch(`/api/companies/${currentCompany.id}/reports`);
+            const data = await res.json();
+            const list = document.getElementById('reports-list');
+            if (data.reports.length === 0) {
+                list.innerHTML = '<div class="empty-state"><h3>No reports yet</h3><p>Generate your first AASB S2 report above.</p></div>';
+            } else {
+                list.innerHTML = data.reports.map(r => `
+                    <div class="report-item">
+                        <div class="report-info">
+                            <h4>${esc(r.title)}</h4>
+                            <p>${r.financial_year} | ${r.total_emissions ? Number(r.total_emissions).toFixed(1)+' tCO2e' : ''} | ${new Date(r.created_at).toLocaleDateString('en-AU')}</p>
+                        </div>
+                        <div class="report-actions">
+                            <span class="status-badge status-${r.status}">${r.status}</span>
+                            ${r.status === 'completed' ? `
+                                <a href="/api/reports/${r.id}/html" target="_blank" class="btn btn-green btn-sm">View Report</a>
+                            ` : ''}
+                            ${r.status === 'generating' ? '<span class="spinner"></span>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Auto-refresh if any generating
+                if (data.reports.some(r => r.status === 'generating')) {
+                    setTimeout(loadReports, 3000);
+                }
+            }
+        } catch (e) { console.error('Failed to load reports', e); }
+    }
+
+    async function generateReport() {
+        if (!currentCompany) return toast('Create a company first');
+        const btn = document.getElementById('generate-btn');
+        const status = document.getElementById('gen-status');
+        btn.disabled = true;
+        status.innerHTML = '<span class="spinner"></span> Generating report (30-60s)...';
+
+        try {
+            const res = await fetch(`/api/companies/${currentCompany.id}/reports/generate`, { method: 'POST' });
+            const data = await res.json();
+            if (data.report) {
+                toast('Report generation started!');
+                status.textContent = 'Report is being generated...';
+                loadReports();
+                // Poll for completion
+                pollReport(data.report.id);
+            } else {
+                status.textContent = data.error || 'Error';
+            }
+        } catch (err) {
+            status.textContent = 'Failed to start generation';
+        }
+        btn.disabled = false;
+    }
+
+    async function pollReport(reportId) {
+        let attempts = 0;
+        const maxAttempts = 40; // 2 minutes max
+        const interval = setInterval(async () => {
+            attempts++;
+            try {
+                const res = await fetch(`/api/reports/${reportId}`);
+                const data = await res.json();
+                if (data.report.status === 'completed') {
+                    clearInterval(interval);
+                    document.getElementById('gen-status').textContent = 'Report ready!';
+                    toast('Your AASB S2 report is ready!');
+                    loadReports();
+                } else if (data.report.status === 'failed') {
+                    clearInterval(interval);
+                    document.getElementById('gen-status').textContent = 'Generation failed. Try again.';
+                    loadReports();
+                }
+            } catch (e) {}
+            if (attempts >= maxAttempts) {
+                clearInterval(interval);
+                document.getElementById('gen-status').textContent = 'Still generating... refresh to check.';
+            }
+        }, 3000);
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    </script>
+</body>
+</html>

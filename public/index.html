@@ -3,38 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>GreenLedger — AASB S2 Climate Disclosure Reports</title>
+    <meta name="description" content="Generate AASB S2-compliant climate disclosure reports in minutes, not months. AI-powered sustainability reporting for Australian businesses.">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-deep: #0a0f0a;
+            --bg-card: #111a11;
+            --bg-subtle: #162016;
+            --green-primary: #22c55e;
+            --green-dim: #166534;
+            --green-glow: rgba(34, 197, 94, 0.15);
+            --text-primary: #f0fdf4;
+            --text-secondary: #86efac;
+            --text-muted: #6b7f6b;
+            --border: rgba(34, 197, 94, 0.12);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 15, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+        .logo span { color: var(--green-primary); }
+
+        .nav-links {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            background: var(--green-primary);
+            color: var(--bg-deep) !important;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .nav-cta:hover { background: #16a34a; }
+
+        .hero {
             min-height: 100vh;
-            background: #fafafa;
-            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .container {
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--green-glow);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            width: fit-content;
+        }
+        .hero-badge .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--green-primary);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--green-primary), #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--green-primary);
+            color: var(--bg-deep);
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary:hover { background: #16a34a; transform: translateY(-1px); }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--text-primary);
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--green-primary); background: var(--green-glow); }
+
+        /* Features */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+        .features-header {
             text-align: center;
-            padding: 40px;
+            margin-bottom: 4rem;
         }
-        h1 { font-size: 2rem; margin-bottom: 16px; }
-        p { color: #666; font-size: 1.1rem; }
+        .features-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        .features-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+        .feature-card:hover { border-color: var(--green-dim); transform: translateY(-2px); }
+        .feature-icon {
+            width: 48px; height: 48px;
+            background: var(--green-glow);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+        }
+        .feature-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* AASB S2 Sections */
+        .standard-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .standard-section .section-label {
+            color: var(--green-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        .standard-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .pillar-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .pillar-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--green-dim);
+            margin-bottom: 0.5rem;
+        }
+        .pillar-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+        .pillar-card p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* CTA */
+        .cta-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        .cta-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem; }
+            .nav-links { gap: 0.75rem; }
+            .hero { padding: 7rem 1.5rem 3rem; }
+            .features, .standard-section { padding: 3rem 1.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to your app</h1>
-        <p>Built with Polsia</p>
-    </div>
+    <nav>
+        <a href="/" class="logo">Green<span>Ledger</span></a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#standard">AASB S2</a>
+            <a href="/app" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
 
-    <!-- Polsia Analytics - tracks page views for your dashboard -->
+    <section class="hero">
+        <div class="hero-badge">
+            <div class="dot"></div>
+            AASB S2 Compliant
+        </div>
+        <h1>Climate disclosure reports<br>in <span class="highlight">minutes, not months</span></h1>
+        <p class="hero-sub">Enter your emissions data. GreenLedger's AI generates a full AASB S2-compliant sustainability report — governance, strategy, risk management, metrics — ready for your board.</p>
+        <div class="hero-actions">
+            <a href="/app" class="btn-primary">Generate Your Report &rarr;</a>
+            <a href="#standard" class="btn-secondary">How It Works</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="features-header">
+            <h2>Built for Australian businesses</h2>
+            <p>From regional manufacturers to ASX-listed firms. GreenLedger handles the complexity so you don't have to.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#9889;</div>
+                <h3>AI-Powered Generation</h3>
+                <p>Feed in energy bills, fuel receipts, and fleet data. Get a complete climate disclosure report mapped to all four AASB S2 pillars.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#127919;</div>
+                <h3>NGA Emission Factors</h3>
+                <p>Built-in Australian National Greenhouse Accounts factors. Automatic Scope 1, 2 & 3 calculations with state-specific electricity grids.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#128200;</div>
+                <h3>Instant Metrics</h3>
+                <p>See your total emissions breakdown by scope the moment you enter data. Track progress over time across financial years.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#128196;</div>
+                <h3>Board-Ready Reports</h3>
+                <p>Professional HTML reports you can print or save as PDF. Formatted for board presentations, auditor review, and regulatory submission.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#128274;</div>
+                <h3>Compliance Mapped</h3>
+                <p>Every report section maps directly to AASB S2 / IFRS S2 requirements. Governance, Strategy, Risk Management, Metrics & Targets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#127759;</div>
+                <h3>All Scopes Covered</h3>
+                <p>Scope 1 (direct), Scope 2 (electricity), and Scope 3 (value chain) — from natural gas and fleet diesel to business travel and waste.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="standard-section" id="standard">
+        <div class="section-label">AASB S2 Framework</div>
+        <h2>Four pillars. One report. Zero guesswork.</h2>
+        <p style="color: var(--text-muted); max-width: 700px; line-height: 1.7;">Australia's mandatory climate disclosure standard requires reporting across four interconnected pillars. GreenLedger generates all four, tailored to your company's actual emissions data.</p>
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-number">01</div>
+                <h4>Governance</h4>
+                <p>Board oversight and management's role in assessing climate risks and opportunities.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-number">02</div>
+                <h4>Strategy</h4>
+                <p>Climate risks identified over short, medium and long term. Resilience under 1.5&deg;C scenarios.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-number">03</div>
+                <h4>Risk Management</h4>
+                <p>Processes for identifying, assessing, and managing climate-related risks.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-number">04</div>
+                <h4>Metrics & Targets</h4>
+                <p>GHG emissions by scope, climate metrics, transition targets and progress tracking.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to simplify your climate reporting?</h2>
+        <p>Enter your emissions data and get a complete AASB S2 report in minutes.</p>
+        <a href="/app" class="btn-primary">Start Now — It's Free &rarr;</a>
+    </section>
+
+    <footer>
+        <p>GreenLedger &copy; 2026. Built for Australian climate disclosure compliance.</p>
+    </footer>
+
+    <!-- Polsia Analytics -->
     <script>
     (function() {
         var slug = 'greenledger';
         if (!slug || slug === '__POLSIA_' + 'SLUG__') return;
-
         var vid = localStorage.getItem('polsia_vid');
         if (!vid) {
             vid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
