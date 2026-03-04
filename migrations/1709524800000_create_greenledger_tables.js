@@ -1,11 +1,11 @@
 module.exports = {
   name: 'create_greenledger_tables',
   up: async (client) => {
-    // Companies table - stores company profiles for report generation
+    // Companies table — stores company profiles for report generation
+    // Uses IF NOT EXISTS to be idempotent and safe for existing databases
     await client.query(`
-      CREATE TABLE companies (
+      CREATE TABLE IF NOT EXISTS companies (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
         name VARCHAR(255) NOT NULL,
         abn VARCHAR(20),
         industry VARCHAR(100),
@@ -18,11 +18,10 @@ module.exports = {
         updated_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
-    await client.query(`CREATE INDEX companies_user_id_idx ON companies(user_id)`);
 
-    // Emissions data - individual emission line items
+    // Emissions data — individual emission line items
     await client.query(`
-      CREATE TABLE emissions_data (
+      CREATE TABLE IF NOT EXISTS emissions_data (
         id SERIAL PRIMARY KEY,
         company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
         category VARCHAR(20) NOT NULL CHECK (category IN ('scope1', 'scope2', 'scope3')),
@@ -39,12 +38,12 @@ module.exports = {
         created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
-    await client.query(`CREATE INDEX emissions_company_id_idx ON emissions_data(company_id)`);
-    await client.query(`CREATE INDEX emissions_category_idx ON emissions_data(category)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS emissions_company_id_idx ON emissions_data(company_id)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS emissions_category_idx ON emissions_data(category)`);
 
-    // Reports table - generated AASB S2 reports
+    // Reports table — generated AASB S2 reports
     await client.query(`
-      CREATE TABLE reports (
+      CREATE TABLE IF NOT EXISTS reports (
         id SERIAL PRIMARY KEY,
         company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
@@ -64,7 +63,7 @@ module.exports = {
         created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
-    await client.query(`CREATE INDEX reports_company_id_idx ON reports(company_id)`);
-    await client.query(`CREATE INDEX reports_status_idx ON reports(status)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS reports_company_id_idx ON reports(company_id)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS reports_status_idx ON reports(status)`);
   }
 };

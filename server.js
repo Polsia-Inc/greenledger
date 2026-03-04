@@ -8,53 +8,43 @@ const { generateReport } = require('./lib/report-generator');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Trust proxy for Render
+// Trust proxy (Vercel, Render, etc.)
 app.set('trust proxy', 1);
 
-if (!process.env.DATABASE_URL) {
+// Database connection — works with Supabase, Neon, or any Postgres
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
   console.error('ERROR: DATABASE_URL environment variable is required');
   process.exit(1);
 }
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL?.includes('localhost') ? false : { rejectUnauthorized: false }
+  connectionString: databaseUrl,
+  ssl: databaseUrl.includes('localhost') ? false : { rejectUnauthorized: false },
 });
 
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'healthy' });
-});
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Landing page
-app.get('/', (req, res) => {
-  const slug = process.env.POLSIA_ANALYTICS_SLUG || '';
-  const htmlPath = path.join(__dirname, 'public', 'index.html');
-  if (fs.existsSync(htmlPath)) {
-    let html = fs.readFileSync(htmlPath, 'utf8');
-    html = html.replace('__POLSIA_SLUG__', slug);
-    res.type('html').send(html);
-  } else {
-    res.json({ message: 'GreenLedger API' });
+// Health check (with DB connectivity)
+app.get('/health', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.json({ status: 'healthy', database: 'connected' });
+  } catch (err) {
+    res.status(503).json({ status: 'unhealthy', database: 'disconnected', error: err.message });
   }
 });
 
 // =============================================
-// API: Emission factor reference data
+// API routes (registered BEFORE static files)
 // =============================================
+
 app.get('/api/emission-factors', (req, res) => {
   res.json({ sourceTypes: getSourceTypes() });
 });
 
-// =============================================
-// API: Companies
-// =============================================
+// --- Companies ---
 app.post('/api/companies', async (req, res) => {
   try {
     const { name, abn, industry, employee_count, financial_year, address, contact_email, contact_name } = req.body;
@@ -94,15 +84,12 @@ app.get('/api/companies/:id', async (req, res) => {
   }
 });
 
-// =============================================
-// API: Emissions Data
-// =============================================
+// --- Emissions Data ---
 app.post('/api/companies/:companyId/emissions', async (req, res) => {
   try {
     const { companyId } = req.params;
     const items = Array.isArray(req.body) ? req.body : [req.body];
 
-    // Verify company exists
     const companyCheck = await pool.query('SELECT id FROM companies WHERE id = $1', [companyId]);
     if (companyCheck.rows.length === 0) return res.status(404).json({ error: 'Company not found' });
 
@@ -113,7 +100,6 @@ app.post('/api/companies/:companyId/emissions', async (req, res) => {
         return res.status(400).json({ error: 'category, source_type, quantity, and unit are required for each item' });
       }
 
-      // Auto-calculate emissions if possible
       const calc = calculateEmissions(category, source_type, parseFloat(quantity));
       const co2e = calc ? calc.co2e_tonnes : (item.co2e_tonnes || null);
       const ef = calc ? calc.emission_factor : (item.emission_factor || null);
@@ -155,19 +141,15 @@ app.delete('/api/emissions/:id', async (req, res) => {
   }
 });
 
-// =============================================
-// API: Report Generation
-// =============================================
+// --- Report Generation ---
 app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
   try {
     const { companyId } = req.params;
 
-    // Get company
     const companyResult = await pool.query('SELECT * FROM companies WHERE id = $1', [companyId]);
     if (companyResult.rows.length === 0) return res.status(404).json({ error: 'Company not found' });
     const company = companyResult.rows[0];
 
-    // Get emissions data
     const emissionsResult = await pool.query(
       'SELECT * FROM emissions_data WHERE company_id = $1 ORDER BY category, source_type',
       [companyId]
@@ -177,7 +159,6 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
     }
     const emissionsData = emissionsResult.rows;
 
-    // Calculate totals
     const totals = emissionsData.reduce((acc, e) => {
       const val = parseFloat(e.co2e_tonnes) || 0;
       if (e.category === 'scope1') acc.scope1 += val;
@@ -187,13 +168,11 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
       return acc;
     }, { scope1: 0, scope2: 0, scope3: 0, total: 0 });
 
-    // Round totals
     totals.scope1 = Math.round(totals.scope1 * 10000) / 10000;
     totals.scope2 = Math.round(totals.scope2 * 10000) / 10000;
     totals.scope3 = Math.round(totals.scope3 * 10000) / 10000;
     totals.total = Math.round(totals.total * 10000) / 10000;
 
-    // Create report record
     const reportInsert = await pool.query(
       `INSERT INTO reports (company_id, title, financial_year, status)
        VALUES ($1, $2, $3, 'generating') RETURNING *`,
@@ -201,10 +180,7 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
     );
     const reportId = reportInsert.rows[0].id;
 
-    // Return immediately with report ID
-    res.json({ report: { id: reportId, status: 'generating' }, message: 'Report generation started' });
-
-    // Generate async
+    // Generate synchronously — works in both serverless (Vercel) and traditional servers
     try {
       const result = await generateReport(company, emissionsData, totals);
       await pool.query(
@@ -225,9 +201,12 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
          totals.scope1, totals.scope2, totals.scope3, totals.total, reportId]
       );
       console.log(`Report ${reportId} generated successfully`);
+      const completed = await pool.query('SELECT * FROM reports WHERE id = $1', [reportId]);
+      res.json({ report: completed.rows[0], message: 'Report generated successfully' });
     } catch (genErr) {
       console.error('Report generation failed:', genErr);
       await pool.query("UPDATE reports SET status = 'failed' WHERE id = $1", [reportId]);
+      res.status(500).json({ report: { id: reportId, status: 'failed' }, error: genErr.message });
     }
   } catch (err) {
     console.error('Generate report error:', err);
@@ -260,7 +239,6 @@ app.get('/api/reports/:id', async (req, res) => {
   }
 });
 
-// Serve report HTML directly for viewing/printing
 app.get('/api/reports/:id/html', async (req, res) => {
   try {
     const result = await pool.query('SELECT report_html, status FROM reports WHERE id = $1', [req.params.id]);
@@ -274,12 +252,28 @@ app.get('/api/reports/:id/html', async (req, res) => {
 });
 
 // =============================================
-// SPA fallback — serve app for /app routes
+// Static files & SPA fallback (AFTER API routes)
 // =============================================
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+  const htmlPath = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(htmlPath)) {
+    res.sendFile(htmlPath);
+  } else {
+    res.json({ message: 'GreenLedger API' });
+  }
+});
+
 app.get('/app*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'app.html'));
 });
 
-app.listen(port, () => {
-  console.log(`GreenLedger running on port ${port}`);
-});
+// Start server — skipped when running on Vercel (serverless)
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`GreenLedger running on port ${port}`);
+  });
+}
+
+module.exports = app;

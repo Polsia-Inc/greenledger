@@ -2,14 +2,17 @@
   "name": "greenledger",
   "version": "1.0.0",
   "main": "server.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
     "build": "npm run migrate",
-    "migrate": "node migrate.js"
+    "migrate": "node migrate.js",
+    "vercel-build": "npm run migrate"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.30.0",
     "express": "^4.18.2",
     "openai": "^4.77.0",
     "pg": "^8.11.3"
