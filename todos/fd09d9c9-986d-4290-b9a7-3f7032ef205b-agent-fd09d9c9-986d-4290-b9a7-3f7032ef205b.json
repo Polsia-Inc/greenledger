@@ -1,0 +1,37 @@
+[
+  {
+    "content": "Explore full GreenLedger codebase structure",
+    "status": "completed",
+    "activeForm": "Exploring full GreenLedger codebase structure"
+  },
+  {
+    "content": "Analyze database schema (migrations + models)",
+    "status": "completed",
+    "activeForm": "Analyzing database schema"
+  },
+  {
+    "content": "Document all API endpoints and routes",
+    "status": "completed",
+    "activeForm": "Documenting all API endpoints and routes"
+  },
+  {
+    "content": "Extract AI/LLM prompts and business logic",
+    "status": "completed",
+    "activeForm": "Extracting AI/LLM prompts and business logic"
+  },
+  {
+    "content": "Document frontend pages, components and styling",
+    "status": "completed",
+    "activeForm": "Documenting frontend pages, components and styling"
+  },
+  {
+    "content": "Write and save GREENLEDGER_SPEC.md",
+    "status": "completed",
+    "activeForm": "Writing GREENLEDGER_SPEC.md"
+  },
+  {
+    "content": "Commit and push to repo",
+    "status": "in_progress",
+    "activeForm": "Committing and pushing to repo"
+  }
+]
