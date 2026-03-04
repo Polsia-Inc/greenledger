@@ -1,0 +1,47 @@
+[
+  {
+    "content": "Check memory & skills for context",
+    "status": "completed",
+    "activeForm": "Checking memory & skills"
+  },
+  {
+    "content": "Explore the GreenLedger codebase",
+    "status": "completed",
+    "activeForm": "Exploring the codebase"
+  },
+  {
+    "content": "Swap AI layer from Polsia Anthropic proxy to OpenAI",
+    "status": "completed",
+    "activeForm": "Swapping AI to direct OpenAI"
+  },
+  {
+    "content": "Update database config for Supabase compatibility",
+    "status": "completed",
+    "activeForm": "Updating database config for Supabase"
+  },
+  {
+    "content": "Add Vercel deployment configuration",
+    "status": "completed",
+    "activeForm": "Adding Vercel config"
+  },
+  {
+    "content": "Clean up Polsia-specific code and files",
+    "status": "completed",
+    "activeForm": "Cleaning up Polsia-specific code"
+  },
+  {
+    "content": "Add .env.example and comprehensive README",
+    "status": "completed",
+    "activeForm": "Writing documentation"
+  },
+  {
+    "content": "Push codebase to user's GitHub repo",
+    "status": "in_progress",
+    "activeForm": "Pushing to user's repo"
+  },
+  {
+    "content": "Complete task and notify owner",
+    "status": "pending",
+    "activeForm": "Completing task and notifying owner"
+  }
+]
