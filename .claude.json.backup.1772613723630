@@ -24,29 +24,10 @@
         "index.html"
       ],
       "exampleFilesGeneratedAt": 1772609764589
-    },
-    "/tmp/polsia-workspaces/company-12739/agent-30/exec-177120/greenledger": {
-      "allowedTools": [],
-      "mcpContextUris": [],
-      "mcpServers": {},
-      "enabledMcpjsonServers": [],
-      "disabledMcpjsonServers": [],
-      "hasTrustDialogAccepted": false,
-      "projectOnboardingSeenCount": 0,
-      "hasClaudeMdExternalIncludesApproved": false,
-      "hasClaudeMdExternalIncludesWarningShown": false,
-      "exampleFiles": [
-        "server.js",
-        "package.json",
-        "report-generator.js",
-        "migrate.js",
-        "create_greenledger_tables.js"
-      ],
-      "exampleFilesGeneratedAt": 1772613723630
     }
   },
   "clientDataCache": {
     "data": null,
-    "timestamp": 1772613725056
+    "timestamp": 1772609765090
   }
 }

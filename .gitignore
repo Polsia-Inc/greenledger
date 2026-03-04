@@ -9,3 +9,6 @@ node_modules/
 .claude/
 projects/
 *.jsonl
+
+# Polsia test fixtures (auto-injected, do not commit)
+test-fixtures/
