@@ -36,6 +36,15 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Download full specification document
+app.get('/download-spec', (req, res) => {
+  const specPath = path.join(__dirname, 'GREENLEDGER_SPEC.md');
+  if (!fs.existsSync(specPath)) {
+    return res.status(404).json({ error: 'Specification file not found' });
+  }
+  res.type('text/plain').sendFile(specPath);
+});
+
 // =============================================
 // API routes (registered BEFORE static files)
 // =============================================
