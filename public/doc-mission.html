@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLedger Mission</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #10b981;
+            --dark-green: #059669;
+            --light-green: #d1fae5;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-gray: #f9fafb;
+            --border-gray: #e5e7eb;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 42px;
+            color: var(--dark-green);
+            margin-top: 0;
+            padding-bottom: 24px;
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        h2 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-top: 48px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-gray);
+        }
+
+        h3 {
+            font-size: 24px;
+            color: var(--dark-green);
+        }
+
+        h4 {
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin: 16px 0;
+            font-size: 16px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .mission-statement {
+            background: linear-gradient(135deg, var(--light-green) 0%, #ecfdf5 100%);
+            padding: 32px;
+            border-radius: 12px;
+            margin: 32px 0;
+            border-left: 6px solid var(--primary-green);
+            font-size: 20px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        .value-box {
+            background: var(--bg-gray);
+            padding: 24px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .value-box h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .value-box p {
+            color: var(--text-secondary);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--primary-green);
+            padding-left: 20px;
+            margin: 24px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 18px;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid var(--border-gray);
+            margin: 48px 0;
+        }
+
+        .metadata {
+            background: var(--light-green);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .metadata p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                max-width: none;
+            }
+
+            h1 {
+                page-break-after: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+
+            .mission-statement {
+                font-size: 18px;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>GreenLedger Mission</h1>
+
+    <div class="metadata">
+        <p><strong>Company:</strong> GreenLedger</p>
+        <p><strong>Founded:</strong> 2026</p>
+        <p><strong>Location:</strong> Sydney, Australia</p>
+    </div>
+
+    <div class="mission-statement">
+        To democratize climate disclosure compliance for Australian businesses through autonomous AI technology, making AASB S2 reporting accessible, affordable, and effortless for companies of all sizes.
+    </div>
+
+    <hr>
+
+    <h2>Our Purpose</h2>
+
+    <p>Climate disclosure is no longer optional—it's mandatory. As of January 2025, Australian businesses are required to report on climate-related financial risks, emissions (Scope 1, 2, and 3), and sustainability metrics under AASB S2 standards.</p>
+
+    <p>But for most Australian SMBs, compliance is:</p>
+    <ul>
+        <li><strong>Too expensive</strong> — Traditional ESG software costs €5,000-€20,000+/year</li>
+        <li><strong>Too slow</strong> — Onboarding takes 2-8 weeks with consultant-led implementations</li>
+        <li><strong>Too complex</strong> — Manual data collection, validation, and reporting workflows</li>
+        <li><strong>Not localized</strong> — Most competitors are EU-focused (CSRD), not AASB S2-native</li>
+    </ul>
+
+    <p><strong>GreenLedger exists to fix this.</strong></p>
+
+    <p>We're building the world's first <strong>autonomous AI agent for AASB S2 compliance</strong>—designed specifically for Australian mid-market businesses who need regulatory compliance without enterprise-level budgets or consulting overhead.</p>
+
+    <hr>
+
+    <h2>What We Believe</h2>
+
+    <div class="value-box">
+        <h3>1. Climate Reporting Should Be Autonomous</h3>
+        <p>Traditional ESG platforms require constant human input—manual data entry, consultant reviews, expert validation loops. This doesn't scale. We believe AI agents can handle the entire compliance workflow autonomously: data collection → emissions calculation → report generation → regulatory submission. No spreadsheets. No consultants. No friction.</p>
+    </div>
+
+    <div class="value-box">
+        <h3>2. Compliance Should Be Affordable</h3>
+        <p>Enterprise ESG software charges €5K-€20K+/year because it's built for Fortune 500 companies with dedicated sustainability teams. Australian SMBs (Group 2 and 3 entities) can't afford this. We're pricing GreenLedger at $500-$2,000/year—50-100x cheaper than competitors—because compliance is a legal requirement, not a luxury.</p>
+    </div>
+
+    <div class="value-box">
+        <h3>3. Localization Matters</h3>
+        <p>Most ESG tools are EU-centric (built for CSRD, ESRS) and treat AASB S2 as an afterthought. We're Australia-first: our emission factors use Australian National Greenhouse Accounts (NGA) data, our reporting templates match AASB S2 disclosure requirements exactly, and our onboarding integrates with Australian accounting systems (Xero, MYOB) and tax platforms (ATO).</p>
+    </div>
+
+    <div class="value-box">
+        <h3>4. Speed Is a Competitive Advantage</h3>
+        <p>Competitors take 2-8 weeks to onboard. Group 2 compliance deadlines (January 2027) are 12 months away. Businesses don't have time for consultant-led implementations. GreenLedger gets you live in <strong>&lt;48 hours</strong>—API integrations pull your utility bills, fuel consumption, and business travel data automatically; AI calculates emissions; reports generate instantly.</p>
+    </div>
+
+    <div class="value-box">
+        <h3>5. Transparency Builds Trust</h3>
+        <p>ESG software pricing is opaque—competitors hide behind "custom quotes" and "contact sales." We publish our pricing upfront. Our tiers ($499, $1,299, $2,999/year) are transparent. No hidden fees. No per-seat charges. No vendor lock-in.</p>
+    </div>
+
+    <hr>
+
+    <h2>Our Vision</h2>
+
+    <p><strong>By 2027, GreenLedger will be the default AASB S2 compliance platform for Australian mid-market businesses.</strong></p>
+
+    <p>Here's how we get there:</p>
+
+    <h3>Phase 1: Market Entry (2026 Q1-Q2)</h3>
+    <ul>
+        <li>Launch MVP: AI agent generates AASB S2-compliant reports (Governance, Strategy, Risk Management, Metrics & Targets)</li>
+        <li>Target Group 2 early movers: 3,500 Australian companies (revenue $50M-$500M) who need compliance by Jan 2027</li>
+        <li>Price aggressively: $499 entry point disrupts the market; competitors forced to respond</li>
+    </ul>
+
+    <h3>Phase 2: Market Dominance (2026 Q3-Q4)</h3>
+    <ul>
+        <li>Expand to Group 3 (voluntary compliance): 50,000+ Australian SMBs who want to get ahead of 2030 mandates</li>
+        <li>Build integrations: Xero, MYOB, ATO APIs for automatic data ingestion</li>
+        <li>Launch Compliance Roadmap calculator: Free tool to assess AASB S2 readiness (lead gen funnel)</li>
+    </ul>
+
+    <h3>Phase 3: Ecosystem Lock-in (2027+)</h3>
+    <ul>
+        <li>GreenLedger Compliance Hub: Webinars, templates, benchmarking community</li>
+        <li>Multi-year contracts: 3-year discounts lock in recurring revenue</li>
+        <li>Expand to related standards: AASB S1 (general sustainability), ISSB (investor-focused disclosures)</li>
+    </ul>
+
+    <blockquote>
+        "The window is NOW. AASB S2 compliance deadlines create a revenue cliff for compliance software. 60,000+ Australian businesses need a solution; current competitors serve &lt;5% of them. First-mover in SMB + autonomous space = 18-24 month defensibility moat."
+    </blockquote>
+
+    <hr>
+
+    <h2>Market Opportunity</h2>
+
+    <p><strong>Australia is ground zero for mandatory climate disclosure.</strong> As one of the world's first markets to adopt ISSB-aligned reporting (AASB S2), Australia leads the global shift from voluntary to mandatory sustainability disclosure.</p>
+
+    <h3>Addressable Market (TAM)</h3>
+    <ul>
+        <li><strong>Group 1 entities</strong> (mandatory by Jan 2025): ~900 companies</li>
+        <li><strong>Group 2 entities</strong> (mandatory by Jan 2027): ~3,500 companies</li>
+        <li><strong>Group 3 entities</strong> (voluntary, massive upside): 50,000+ SMBs</li>
+        <li><strong>Total:</strong> ~60,000 Australian businesses will need AASB S2 software by 2030</li>
+    </ul>
+
+    <h3>Revenue Projections</h3>
+    <ul>
+        <li>10% Group 2 penetration → 350 customers × $2,000 = <strong>$700K ARR</strong></li>
+        <li>20% Group 3 penetration → 10,000 customers × $500 = <strong>$5M ARR</strong></li>
+        <li><strong>3-year TAM opportunity: $10M-$50M ARR</strong></li>
+    </ul>
+
+    <hr>
+
+    <h2>Competitive Advantage</h2>
+
+    <p>GreenLedger owns three dimensions competitors can't match:</p>
+
+    <h3>1. AASB S2 Native</h3>
+    <p>Most competitors (Greenly, Sweep, Credibl, Plan A) are EU-centric. They built for CSRD/ESRS and retrofitted AASB S2 support as an afterthought. We're built from day one for Australian regulations:</p>
+    <ul>
+        <li>NGA emission factors (23 source types, Scope 1/2/3)</li>
+        <li>AASB S2 disclosure templates (4 pillars: Governance, Strategy, Risk, Metrics)</li>
+        <li>Australian tax/accounting integrations (Xero, MYOB, ATO)</li>
+    </ul>
+
+    <h3>2. Autonomous End-to-End</h3>
+    <p>Competitors require human validation loops:</p>
+    <ul>
+        <li>Greenly: Integrations collect data, but humans review + validate</li>
+        <li>Plan A: Expert-led consulting at every step</li>
+        <li>Credibl: EVA chatbot answers questions, but humans run the process</li>
+    </ul>
+    <p>GreenLedger is fully autonomous: API ingestion → AI calculations → automated report generation → regulatory submission. No human intervention required.</p>
+
+    <h3>3. Affordable Pricing</h3>
+    <p>We're 50-100x cheaper than competitors:</p>
+    <ul>
+        <li>Greenly: €5K-€12K/year (EU SMBs)</li>
+        <li>Sweep: €15K+/month (enterprise)</li>
+        <li>Plan A: €20K+/year (consulting-bundled)</li>
+        <li><strong>GreenLedger: $499-$2,999/year</strong></li>
+    </ul>
+    <p>This isn't a race to the bottom—it's unlocking a market competitors ignore.</p>
+
+    <hr>
+
+    <h2>Who We're Building For</h2>
+
+    <p><strong>Primary Customer: Australian Mid-Market Businesses (Group 2 Entities)</strong></p>
+    <ul>
+        <li><strong>Size:</strong> 100-500 employees, $50M-$500M revenue</li>
+        <li><strong>Industries:</strong> Manufacturing, retail, tech, professional services, construction</li>
+        <li><strong>Pain:</strong> AASB S2 compliance deadline (Jan 2027) looming; no in-house sustainability team; can't afford €10K+/year software or Big 4 consultants</li>
+        <li><strong>Job-to-be-done:</strong> "Get us compliant with AASB S2 before Jan 2027—fast, affordable, no consultant overhead."</li>
+    </ul>
+
+    <p><strong>Secondary Customer: Australian SMBs (Group 3 Entities)</strong></p>
+    <ul>
+        <li><strong>Size:</strong> 20-100 employees, $5M-$50M revenue</li>
+        <li><strong>Pain:</strong> Voluntary compliance now, but mandatory by 2030; want to get ahead; suppliers/investors asking for ESG data</li>
+        <li><strong>Job-to-be-done:</strong> "Prove we care about climate; build ESG credibility; prepare for 2030 mandate."</li>
+    </ul>
+
+    <hr>
+
+    <h2>Product Strategy</h2>
+
+    <h3>Core Product: Autonomous AASB S2 Report Generator</h3>
+    <p><strong>Input:</strong></p>
+    <ul>
+        <li>Company details (name, industry, structure)</li>
+        <li>Emissions data (utility bills, fuel consumption, fleet, business travel)</li>
+        <li>Optional: Supplier data for Scope 3 calculations</li>
+    </ul>
+
+    <p><strong>AI Agent Workflow:</strong></p>
+    <ol>
+        <li><strong>Data Ingestion</strong>: Pull from APIs (Xero, MYOB, ATO) or manual CSV upload</li>
+        <li><strong>Emissions Calculation</strong>: Auto-apply NGA factors; calculate CO₂e for Scope 1/2/3</li>
+        <li><strong>Report Generation</strong>: GPT-4o generates board-ready AASB S2 disclosure (4 pillars)</li>
+        <li><strong>Output</strong>: Downloadable HTML/PDF; audit-ready evidence trail</li>
+    </ol>
+
+    <p><strong>Output:</strong></p>
+    <ul>
+        <li>Full AASB S2 compliance report (Governance, Strategy, Risk Management, Metrics & Targets)</li>
+        <li>Print-ready HTML + PDF</li>
+        <li>Evidence trail for auditors (data sources, calculations, assumptions)</li>
+    </ul>
+
+    <h3>Roadmap (2026-2027)</h3>
+    <ul>
+        <li><strong>Q1 2026:</strong> Launch MVP (manual data entry, AI report generation)</li>
+        <li><strong>Q2 2026:</strong> API integrations (Xero, MYOB for automatic data pull)</li>
+        <li><strong>Q3 2026:</strong> Scope 3 automation (AI-inferred supplier emissions from public data)</li>
+        <li><strong>Q4 2026:</strong> Monthly compliance dashboard (rolling updates, not just annual reporting)</li>
+        <li><strong>Q1 2027:</strong> AASB S1 support (general sustainability disclosures)</li>
+    </ul>
+
+    <hr>
+
+    <h2>Go-to-Market Strategy</h2>
+
+    <h3>Marketing Positioning</h3>
+    <p><strong>Tagline:</strong> "Autonomous AASB S2 Reporting for Australian SMBs. Compliance in Hours, Not Months."</p>
+
+    <p><strong>Messaging Pillars:</strong></p>
+    <ol>
+        <li><strong>AASB S2 Native</strong> — Built for Australian regulations, not retrofitted from EU</li>
+        <li><strong>Autonomous AI Agent</strong> — No consultants, no manual work</li>
+        <li><strong>Affordable</strong> — $500-$2K/year (vs. competitors' $5K-$15K+)</li>
+        <li><strong>Fast Onboarding</strong> — Live in &lt;48 hours (vs. 2-8 weeks)</li>
+        <li><strong>Ongoing Compliance</strong> — Rolling dashboard, not annual scramble</li>
+    </ol>
+
+    <h3>Distribution Channels</h3>
+    <ul>
+        <li><strong>Direct Sales:</strong> Outbound to Group 2 companies (LinkedIn, email campaigns targeting CFOs, sustainability managers)</li>
+        <li><strong>Content Marketing:</strong> SEO-optimized guides ("AASB S2 Compliance Checklist for Australian SMBs"), webinars</li>
+        <li><strong>Partnerships:</strong> Accounting firms (MYOB, Xero ecosystems), sustainability consultants (reseller referrals)</li>
+        <li><strong>Free Tools:</strong> Compliance Roadmap calculator (lead magnet for email capture)</li>
+    </ul>
+
+    <hr>
+
+    <h2>Success Metrics</h2>
+
+    <p><strong>North Star Metric: Annual Recurring Revenue (ARR)</strong></p>
+
+    <p><strong>Key Performance Indicators (KPIs):</strong></p>
+    <ul>
+        <li><strong>Customer Acquisition:</strong> Target 350 Group 2 customers by Jan 2027 (10% market share) = $700K ARR</li>
+        <li><strong>Onboarding Speed:</strong> Maintain &lt;48 hour time-to-value (vs. competitors' 2-8 weeks)</li>
+        <li><strong>Customer Retention:</strong> 90%+ renewal rate (compliance is multi-year; once locked in, high switching cost)</li>
+        <li><strong>Market Share:</strong> Own 20-30% of Australian SMB AASB S2 market by 2027</li>
+    </ul>
+
+    <hr>
+
+    <h2>Founding Team</h2>
+
+    <p><strong>Rushi Korde</strong> — Founder & CEO</p>
+    <ul>
+        <li><strong>GRI Certified</strong> sustainability professional</li>
+        <li><strong>Advises universities and government bodies</strong> on ESG reporting</li>
+        <li><strong>Based in Sydney</strong> — epicenter of Australia's AASB S2 compliance wave</li>
+        <li><strong>UNSW Founders 10x Accelerator</strong> alumnus</li>
+        <li><strong>Multicultural Advisory Panel</strong> member (City of Sydney) — connected to government stakeholders</li>
+    </ul>
+
+    <blockquote>
+        "I've spent years advising organizations on ESG compliance. I've seen firsthand how broken the current software market is—too expensive, too slow, too complex. GreenLedger is the solution I wish existed when I was consulting. We're making climate disclosure effortless for Australian businesses."
+    </blockquote>
+
+    <hr>
+
+    <h2>Why Now?</h2>
+
+    <p><strong>1. Regulatory Tailwind</strong></p>
+    <p>AASB S2 mandates create urgency. Group 1 (Jan 2025) already reporting. Group 2 (Jan 2027) panicking. This is our window.</p>
+
+    <p><strong>2. Market Gap</strong></p>
+    <p>No affordable, autonomous, AASB-native solution exists. Competitors charge €5K-€20K+/year and take 2-8 weeks to onboard. We're 10x faster, 5x cheaper.</p>
+
+    <p><strong>3. AI Maturity</strong></p>
+    <p>GPT-4o enables autonomous report generation. Previous-gen models couldn't handle compliance-grade outputs. Now they can.</p>
+
+    <p><strong>4. Australia-First Advantage</strong></p>
+    <p>Australia is 6-12 months ahead of EU/US on mandatory climate disclosure. We can own this market before global players pivot.</p>
+
+    <hr>
+
+    <h2>Our Commitment</h2>
+
+    <p>GreenLedger is not just software—it's infrastructure for Australia's climate-transparent economy.</p>
+
+    <p>We're building for:</p>
+    <ul>
+        <li><strong>The CFO</strong> who needs compliance before Jan 2027 but doesn't have a $100K consulting budget</li>
+        <li><strong>The sustainability manager</strong> drowning in spreadsheets who wants to automate the entire workflow</li>
+        <li><strong>The SMB owner</strong> who cares about climate but can't afford enterprise software</li>
+        <li><strong>The Australian economy</strong> that needs scalable compliance infrastructure as regulations tighten</li>
+    </ul>
+
+    <p><strong>We're here to make climate disclosure effortless, affordable, and autonomous.</strong></p>
+
+    <hr>
+
+    <div class="metadata">
+        <p><strong>Document Version:</strong> 1.0</p>
+        <p><strong>Last Updated:</strong> March 5, 2026</p>
+        <p><strong>Contact:</strong> GreenLedger | Sydney, Australia</p>
+    </div>
+
+</body>
+</html>
