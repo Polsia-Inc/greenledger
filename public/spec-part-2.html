@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLedger Spec — Part 2 of 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f5f7fa;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a0f0a 0%, #162016 100%);
+            color: #f0fdf4;
+            padding: 3rem 2.5rem;
+            border-bottom: 4px solid #22c55e;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #86efac;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .part-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .content {
+            padding: 2.5rem;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #166534;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 3px solid #22c55e;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #166534;
+            border-bottom: 2px solid #bbf7d0;
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: #166534;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: #16a34a;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        code {
+            background: #f0fdf4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        pre {
+            background: #0a0f0a;
+            color: #86efac;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #22c55e;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            color: #86efac;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: #166534;
+            color: white;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        blockquote {
+            border-left: 4px solid #22c55e;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #166534;
+            background: #f0fdf4;
+            padding: 1rem 1rem 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 2rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: #f9fafb;
+            color: #6b7f6b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer .brand {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GreenLedger — Complete Application Specification</h1>
+            <div class="subtitle">Comprehensive Technical Documentation</div>
+            <span class="part-badge">Part 2 of 3</span>
+        </div>
+
+        <div class="content">
+            <h2>Table of Contents — Part 2</h2>
+            <ol start="7">
+                <li>Business Logic — Emissions Calculations</li>
+                <li>AI/LLM Integration — Report Generation</li>
+                <li>Frontend — Landing Page</li>
+                <li>Frontend — Dashboard (App)</li>
+            </ol>
+
+            <hr>
+
+            <h2>7. Business Logic — Emissions Calculations</h2>
+
+            <h3>NGA Emission Factors</h3>
+            <p>All 23 emission source types with their factors, units, and scope categorization:</p>
+
+            <h4>Scope 1 — Direct Emissions (8 sources)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Factor (kg CO2e/unit)</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>natural_gas</code></td>
+                        <td>51.53</td>
+                        <td>GJ</td>
+                        <td>Natural gas combustion</td>
+                    </tr>
+                    <tr>
+                        <td><code>diesel</code></td>
+                        <td>2.7006</td>
+                        <td>L</td>
+                        <td>Diesel fuel combustion</td>
+                    </tr>
+                    <tr>
+                        <td><code>petrol</code></td>
+                        <td>2.3292</td>
+                        <td>L</td>
+                        <td>Petrol fuel combustion</td>
+                    </tr>
+                    <tr>
+                        <td><code>lpg</code></td>
+                        <td>1.5441</td>
+                        <td>L</td>
+                        <td>LPG combustion</td>
+                    </tr>
+                    <tr>
+                        <td><code>fleet_diesel</code></td>
+                        <td>2.7006</td>
+                        <td>L</td>
+                        <td>Fleet vehicle - diesel</td>
+                    </tr>
+                    <tr>
+                        <td><code>fleet_petrol</code></td>
+                        <td>2.3292</td>
+                        <td>L</td>
+                        <td>Fleet vehicle - petrol</td>
+                    </tr>
+                    <tr>
+                        <td><code>refrigerant_r410a</code></td>
+                        <td>2088</td>
+                        <td>kg</td>
+                        <td>Refrigerant R-410A leakage</td>
+                    </tr>
+                    <tr>
+                        <td><code>refrigerant_r134a</code></td>
+                        <td>1430</td>
+                        <td>kg</td>
+                        <td>Refrigerant R-134a leakage</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Scope 2 — Purchased Electricity (8 sources)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Factor (kg CO2e/unit)</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>electricity_nsw</code></td>
+                        <td>0.79</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - NSW/ACT</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_vic</code></td>
+                        <td>1.02</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - VIC</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_qld</code></td>
+                        <td>0.80</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - QLD</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_sa</code></td>
+                        <td>0.35</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - SA</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_wa</code></td>
+                        <td>0.68</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - WA</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_tas</code></td>
+                        <td>0.17</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - TAS</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_nt</code></td>
+                        <td>0.60</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - NT</td>
+                    </tr>
+                    <tr>
+                        <td><code>electricity_national</code></td>
+                        <td>0.73</td>
+                        <td>kWh</td>
+                        <td>Grid electricity - National average</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Scope 3 — Value Chain (7 sources)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Factor (kg CO2e/unit)</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>business_travel_air_domestic</code></td>
+                        <td>0.195</td>
+                        <td>km</td>
+                        <td>Domestic air travel</td>
+                    </tr>
+                    <tr>
+                        <td><code>business_travel_air_international</code></td>
+                        <td>0.115</td>
+                        <td>km</td>
+                        <td>International air travel</td>
+                    </tr>
+                    <tr>
+                        <td><code>employee_commute_car</code></td>
+                        <td>0.171</td>
+                        <td>km</td>
+                        <td>Employee commute by car</td>
+                    </tr>
+                    <tr>
+                        <td><code>waste_landfill</code></td>
+                        <td>1.1</td>
+                        <td>tonnes</td>
+                        <td>Waste to landfill</td>
+                    </tr>
+                    <tr>
+                        <td><code>waste_recycled</code></td>
+                        <td>0.021</td>
+                        <td>tonnes</td>
+                        <td>Waste recycled</td>
+                    </tr>
+                    <tr>
+                        <td><code>water_supply</code></td>
+                        <td>0.394</td>
+                        <td>kL</td>
+                        <td>Water supply & treatment</td>
+                    </tr>
+                    <tr>
+                        <td><code>paper</code></td>
+                        <td>0.919</td>
+                        <td>tonnes</td>
+                        <td>Paper consumption</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Calculation Formula</h3>
+            <pre><code>CO2e (kg) = quantity * emission_factor
+CO2e (tonnes) = CO2e (kg) / 1000</code></pre>
+
+            <p><strong>Rounding:</strong> Results are rounded to 4 decimal places using: <code>Math.round(value * 10000) / 10000</code></p>
+
+            <h3>Complete Calculation Code</h3>
+            <pre><code>function calculateEmissions(category, sourceType, quantity) {
+  const factors = EMISSION_FACTORS[category];
+  if (!factors || !factors[sourceType]) return null;
+
+  const ef = factors[sourceType];
+  // Factor is in kg CO2-e per unit, convert to tonnes
+  const co2eKg = quantity * ef.factor;
+  const co2eTonnes = co2eKg / 1000;
+
+  return {
+    co2e_tonnes: Math.round(co2eTonnes * 10000) / 10000,
+    emission_factor: ef.factor,
+    unit: ef.unit,
+    description: ef.description
+  };
+}</code></pre>
+
+            <h3>Scope Totals Calculation (Server-Side)</h3>
+            <p>When generating a report, the server sums emissions by scope:</p>
+            <pre><code>const totals = emissionsData.reduce((acc, e) => {
+  const val = parseFloat(e.co2e_tonnes) || 0;
+  if (e.category === 'scope1') acc.scope1 += val;
+  else if (e.category === 'scope2') acc.scope2 += val;
+  else if (e.category === 'scope3') acc.scope3 += val;
+  acc.total += val;
+  return acc;
+}, { scope1: 0, scope2: 0, scope3: 0, total: 0 });
+
+// Round to 4 decimal places
+totals.scope1 = Math.round(totals.scope1 * 10000) / 10000;
+totals.scope2 = Math.round(totals.scope2 * 10000) / 10000;
+totals.scope3 = Math.round(totals.scope3 * 10000) / 10000;
+totals.total = Math.round(totals.total * 10000) / 10000;</code></pre>
+
+            <hr>
+
+            <h2>8. AI/LLM Integration — Report Generation</h2>
+
+            <h3>OpenAI Configuration</h3>
+            <pre><code>const OpenAI = require('openai');
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});</code></pre>
+
+            <h3>Chat Function</h3>
+            <p>All AI calls go through a single wrapper:</p>
+            <pre><code>async function chat(message, options = {}) {
+  const response = await openai.chat.completions.create({
+    model: options.model || process.env.OPENAI_MODEL || 'gpt-4o',
+    max_tokens: options.maxTokens || 8192,
+    messages: [
+      ...(options.system ? [{ role: 'system', content: options.system }] : []),
+      { role: 'user', content: message },
+    ],
+  });
+  return response.choices[0].message.content;
+}</code></pre>
+
+            <p><strong>Key settings:</strong></p>
+            <ul>
+                <li><strong>Model:</strong> <code>gpt-4o</code> (default), configurable via <code>OPENAI_MODEL</code> env var</li>
+                <li><strong>Max tokens per section:</strong> <code>4096</code></li>
+                <li><strong>Temperature:</strong> Not explicitly set — uses OpenAI default (<code>1.0</code>)</li>
+                <li><strong>No streaming:</strong> Synchronous completion</li>
+            </ul>
+
+            <h3>Report Generation Flow</h3>
+            <ol>
+                <li>Build a <strong>company context string</strong> from company data + emissions data</li>
+                <li>Fire <strong>4 parallel API calls</strong> (one for each AASB S2 section) using <code>Promise.all()</code></li>
+                <li>Assemble the complete HTML report from the 4 section outputs</li>
+            </ol>
+
+            <h3>Company Context String (User Message)</h3>
+            <p>This string is sent as the <code>user</code> message to all 4 section generators:</p>
+            <pre><code>function buildCompanyContext(company, emissionsData, totals) {
+  const scopeBreakdown = emissionsData.reduce((acc, e) => {
+    if (!acc[e.category]) acc[e.category] = [];
+    acc[e.category].push(`${e.source_type}: ${e.co2e_tonnes} tCO2e (${e.quantity} ${e.unit})`);
+    return acc;
+  }, {});
+
+  return `
+Company: ${company.name}
+ABN: ${company.abn || 'Not provided'}
+Industry: ${company.industry || 'Not specified'}
+Employees: ${company.employee_count || 'Not specified'}
+Financial Year: ${company.financial_year}
+Location: ${company.address || 'Australia'}
+
+Total Emissions:
+- Scope 1 (Direct): ${totals.scope1} tCO2e
+- Scope 2 (Electricity): ${totals.scope2} tCO2e
+- Scope 3 (Value Chain): ${totals.scope3} tCO2e
+- Total: ${totals.total} tCO2e
+
+Emission Sources:
+${Object.entries(scopeBreakdown).map(([cat, items]) =>
+    `${cat.toUpperCase()}:\n${items.map(i => `  - ${i}`).join('\n')}`
+  ).join('\n')}
+`.trim();
+}</code></pre>
+
+            <h3>System Prompt #1: Governance Section</h3>
+            <pre><code>You are an expert Australian sustainability reporting consultant. Generate the GOVERNANCE section of an AASB S2 (IFRS S2 aligned) climate disclosure report.
+
+This section must cover:
+1. Board oversight of climate-related risks and opportunities
+2. Management's role in assessing and managing climate-related risks
+3. How climate considerations are integrated into strategy and decision-making
+4. Governance bodies or committees responsible for climate oversight
+
+Write in professional third person. Use the company data provided to make it specific and relevant.
+Return ONLY the section content in clean HTML (use &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; tags). No wrapper div needed.
+Be thorough but concise — aim for 300-500 words.</code></pre>
+
+            <p><strong>Max tokens:</strong> 4096</p>
+
+            <h3>System Prompt #2: Strategy Section</h3>
+            <pre><code>You are an expert Australian sustainability reporting consultant. Generate the STRATEGY section of an AASB S2 (IFRS S2 aligned) climate disclosure report.
+
+This section must cover:
+1. Climate-related risks and opportunities identified over short, medium, and long term
+2. Impact on the entity's business model and value chain
+3. Resilience of strategy under different climate scenarios (including 1.5°C aligned)
+4. Transition plans and decarbonisation pathway
+
+Write in professional third person. Use the company data provided to make it specific and relevant.
+Return ONLY the section content in clean HTML (use &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; tags). No wrapper div needed.
+Be thorough but concise — aim for 400-600 words.</code></pre>
+
+            <p><strong>Max tokens:</strong> 4096</p>
+
+            <h3>System Prompt #3: Risk Management Section</h3>
+            <pre><code>You are an expert Australian sustainability reporting consultant. Generate the RISK MANAGEMENT section of an AASB S2 (IFRS S2 aligned) climate disclosure report.
+
+This section must cover:
+1. Processes for identifying climate-related risks
+2. Processes for assessing and prioritising climate-related risks
+3. How climate risks are integrated into overall risk management
+4. Processes for managing climate-related opportunities
+
+Write in professional third person. Use the company data provided to make it specific and relevant.
+Return ONLY the section content in clean HTML (use &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; tags). No wrapper div needed.
+Be thorough but concise — aim for 300-500 words.</code></pre>
+
+            <p><strong>Max tokens:</strong> 4096</p>
+
+            <h3>System Prompt #4: Metrics & Targets Section</h3>
+            <pre><code>You are an expert Australian sustainability reporting consultant. Generate the METRICS AND TARGETS section of an AASB S2 (IFRS S2 aligned) climate disclosure report.
+
+This section must cover:
+1. GHG emissions — Scope 1, 2, and 3 with methodology notes
+2. Climate-related metrics relevant to the industry
+3. Targets set and progress against them
+4. Transition risks quantified where possible
+5. Include the actual emissions data in a well-formatted table
+
+Write in professional third person. Use the actual emissions data provided.
+Return ONLY the section content in clean HTML (use &lt;h3&gt;, &lt;p&gt;, &lt;table&gt;, &lt;ul&gt;, &lt;li&gt; tags). No wrapper div needed.
+For tables use class="data-table" and include proper &lt;thead&gt; and &lt;tbody&gt;.
+Be thorough — aim for 500-700 words. Include all emissions data in a clear table format.</code></pre>
+
+            <p><strong>Max tokens:</strong> 4096</p>
+
+            <p><strong>Note:</strong> The Metrics & Targets section receives an <strong>enriched context</strong> that includes a markdown table of all individual emissions.</p>
+
+            <h3>Parallel Execution</h3>
+            <p>All 4 sections are generated simultaneously:</p>
+            <pre><code>const [governance, strategy, riskManagement, metricsTargets] = await Promise.all([
+  generateGovernanceSection(companyContext),
+  generateStrategySection(companyContext),
+  generateRiskManagementSection(companyContext),
+  generateMetricsTargetsSection(companyContext, totals, emissionsData),
+]);</code></pre>
+
+            <hr>
+
+            <h2>9. Frontend — Landing Page</h2>
+
+            <h3>Route: GET / → public/index.html</h3>
+            <p>A dark-themed marketing landing page.</p>
+
+            <h3>Page Structure</h3>
+
+            <h4>1. Fixed Navigation Bar</h4>
+            <ul>
+                <li>Logo: "Green<strong>Ledger</strong>" (Ledger in green)</li>
+                <li>Links: "Features" (anchor to #features), "AASB S2" (anchor to #standard)</li>
+                <li>CTA button: "Get Started" → links to <code>/app</code></li>
+            </ul>
+
+            <h4>2. Hero Section (full viewport height)</h4>
+            <ul>
+                <li>Badge: Pulsing green dot + "AASB S2 Compliant"</li>
+                <li>Headline: "Climate disclosure reports in <strong>minutes, not months</strong>" (gradient text on highlight)</li>
+                <li>Subheadline: "Enter your emissions data. GreenLedger's AI generates a full AASB S2-compliant sustainability report — governance, strategy, risk management, metrics — ready for your board."</li>
+                <li>CTA buttons:
+                    <ul>
+                        <li>Primary: "Generate Your Report →" → <code>/app</code></li>
+                        <li>Secondary: "How It Works" → <code>#standard</code></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>3. Features Section (id: features)</h4>
+            <ul>
+                <li>Header: "Built for Australian businesses"</li>
+                <li>Subheader: "From regional manufacturers to ASX-listed firms..."</li>
+                <li>6 feature cards in a responsive grid (3×2 on desktop, 1-column on mobile):
+                    <ul>
+                        <li>⚡ <strong>AI-Powered Generation</strong></li>
+                        <li>🎯 <strong>NGA Emission Factors</strong></li>
+                        <li>📈 <strong>Instant Metrics</strong></li>
+                        <li>📄 <strong>Board-Ready Reports</strong></li>
+                        <li>🔒 <strong>Compliance Mapped</strong></li>
+                        <li>🌏 <strong>All Scopes Covered</strong></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>4. AASB S2 Framework Section (id: standard)</h4>
+            <ul>
+                <li>Label: "AASB S2 Framework" (green uppercase)</li>
+                <li>Headline: "Four pillars. One report. Zero guesswork."</li>
+                <li>4 pillar cards in a grid:
+                    <ul>
+                        <li><strong>01 Governance</strong> — Board oversight and management's role</li>
+                        <li><strong>02 Strategy</strong> — Climate risks over short, medium, long term</li>
+                        <li><strong>03 Risk Management</strong> — Processes for identifying/managing risks</li>
+                        <li><strong>04 Metrics & Targets</strong> — GHG emissions by scope</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>5. CTA Section</h4>
+            <ul>
+                <li>"Ready to simplify your climate reporting?"</li>
+                <li>Button: "Start Now — It's Free →" → <code>/app</code></li>
+            </ul>
+
+            <h4>6. Footer</h4>
+            <p>"GreenLedger © 2026. Built for Australian climate disclosure compliance."</p>
+
+            <hr>
+
+            <h2>10. Frontend — Dashboard (App)</h2>
+
+            <h3>Route: GET /app* → public/app.html</h3>
+            <p>A single-page application with a <strong>3-step wizard</strong> interface. No framework — vanilla JavaScript with <code>fetch()</code> API calls.</p>
+
+            <h3>Page Layout</h3>
+            <ul>
+                <li><strong>Fixed Top Nav:</strong> Logo "Green<strong>Ledger</strong>" + "Home" link back to <code>/</code></li>
+                <li><strong>App Container:</strong> Max-width 1100px, centered</li>
+                <li><strong>Step Tabs:</strong> Horizontal tab bar with 3 steps</li>
+            </ul>
+
+            <h3>Step 1: Company Profile</h3>
+            <p><strong>Tab:</strong> <code>1</code> Company Profile</p>
+
+            <p><strong>Components:</strong></p>
+            <ul>
+                <li><strong>Card: "Company Profile"</strong>
+                    <ul>
+                        <li>Description: "Enter your company details. This information will appear in your AASB S2 disclosure report."</li>
+                        <li>Form with 2-column grid:
+                            <ul>
+                                <li>Company Name * (text input, required)</li>
+                                <li>ABN (text input, max 20 chars)</li>
+                                <li>Industry (dropdown select)</li>
+                                <li>Financial Year * (dropdown select, required)</li>
+                                <li>Number of Employees (number input)</li>
+                                <li>Contact Email (email input)</li>
+                                <li>Contact Name (text input)</li>
+                                <li>Address (text input)</li>
+                            </ul>
+                        </li>
+                        <li>Submit button: "Save & Continue"</li>
+                    </ul>
+                </li>
+                <li><strong>Card: "Your Companies"</strong> (hidden until companies exist)
+                    <ul>
+                        <li>Lists existing companies with Select button</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>Industry Options:</strong> Manufacturing, Mining, Construction, Transport & Logistics, Agriculture, Retail, Financial Services, Technology, Healthcare, Education, Government, Professional Services, Energy & Utilities, Property & Real Estate, Hospitality, Other</p>
+
+            <p><strong>Financial Year Options:</strong> FY 2025-2026, FY 2024-2025, FY 2023-2024</p>
+
+            <p><strong>Behavior:</strong> On "Save & Continue": POST to <code>/api/companies</code>, save response as <code>currentCompany</code>, auto-navigate to Step 2</p>
+
+            <h3>Step 2: Emissions Data</h3>
+            <p><strong>Tab:</strong> <code>2</code> Emissions Data</p>
+
+            <p><strong>Shows "Create a company first" message if no <code>currentCompany</code> is set.</strong></p>
+
+            <p><strong>Components:</strong></p>
+            <ul>
+                <li><strong>Metrics Row</strong> (4 cards in a grid):
+                    <ul>
+                        <li>Scope 1 (tCO2e) — green number</li>
+                        <li>Scope 2 (tCO2e) — green number</li>
+                        <li>Scope 3 (tCO2e) — green number</li>
+                        <li>Total Emissions — green number</li>
+                    </ul>
+                </li>
+                <li><strong>Card: "Add Emission Source"</strong>
+                    <ul>
+                        <li>Form with 2-column grid:
+                            <ul>
+                                <li>Scope * (dropdown: Scope 1, 2, or 3)</li>
+                                <li>Source Type * (dynamically populated based on selected scope)</li>
+                                <li>Quantity * (number input)</li>
+                                <li>Unit (readonly text input, auto-filled from source type)</li>
+                                <li>Period Start (date input)</li>
+                                <li>Period End (date input)</li>
+                                <li>Description (full-width text input, optional)</li>
+                            </ul>
+                        </li>
+                        <li>Submit button: "Add Emission"</li>
+                    </ul>
+                </li>
+                <li><strong>Card: "Emissions Data"</strong> (with "Continue to Report →" button in header)
+                    <ul>
+                        <li>Data table with columns: Scope | Source | Quantity | tCO2e | Period | Actions</li>
+                        <li>Scope column shows colored badges: <code>S1</code> (red), <code>S2</code> (blue), <code>S3</code> (yellow)</li>
+                        <li>Actions column: "Remove" button (red)</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>Behavior:</strong> Changing scope dropdown dynamically populates source type dropdown. Metrics recalculate on every load from the emissions data array.</p>
+
+            <h3>Step 3: Generate Report</h3>
+            <p><strong>Tab:</strong> <code>3</code> Generate Report</p>
+
+            <p><strong>Shows "Create a company first" message if no <code>currentCompany</code> is set.</strong></p>
+
+            <p><strong>Components:</strong></p>
+            <ul>
+                <li><strong>Card: "Generate AASB S2 Report"</strong>
+                    <ul>
+                        <li>Description: "AI will generate all four report sections (Governance, Strategy, Risk Management, Metrics & Targets) based on your company profile and emissions data. Takes 30-60 seconds."</li>
+                        <li>Button: "Generate AASB S2 Report"</li>
+                    </ul>
+                </li>
+                <li><strong>Card: "Your Reports"</strong>
+                    <ul>
+                        <li>Lists reports with title, metadata, status badge</li>
+                        <li>"View Report" button (only for completed reports) — opens <code>/api/reports/:id/html</code> in new tab</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>Behavior:</strong> "Generate AASB S2 Report" button: POST to <code>/api/companies/:id/reports/generate</code>, disables button, shows spinner. On completion: shows "Report ready!" toast, reloads reports list.</p>
+
+            <h3>Navigation Behavior</h3>
+            <ul>
+                <li>Steps are clickable tabs that show/hide corresponding panels</li>
+                <li>Previous steps get a "done" visual indicator</li>
+                <li>Step 2 and 3 check if <code>currentCompany</code> exists</li>
+            </ul>
+
+            <h3>Client-Side State</h3>
+            <pre><code>let currentCompany = null;   // Currently selected company object
+let emissionsData = [];       // Cached emissions for current company
+let sourceTypes = {};          // Emission factor definitions from API</code></pre>
+
+            <p><em>Continued in Part 3...</em></p>
+
+        </div>
+
+        <div class="footer">
+            <p><strong>Part 2 of 3</strong> — Sections 7-10 (Emissions Calculations through Dashboard Frontend)</p>
+            <p>Generated by <span class="brand">GreenLedger</span> • March 5, 2026</p>
+        </div>
+    </div>
+</body>
+</html>

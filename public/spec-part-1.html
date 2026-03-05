@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLedger Spec — Part 1 of 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f5f7fa;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a0f0a 0%, #162016 100%);
+            color: #f0fdf4;
+            padding: 3rem 2.5rem;
+            border-bottom: 4px solid #22c55e;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #86efac;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .part-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .content {
+            padding: 2.5rem;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #166534;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 3px solid #22c55e;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #166534;
+            border-bottom: 2px solid #bbf7d0;
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: #166534;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: #16a34a;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        code {
+            background: #f0fdf4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        pre {
+            background: #0a0f0a;
+            color: #86efac;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #22c55e;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            color: #86efac;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: #166534;
+            color: white;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        blockquote {
+            border-left: 4px solid #22c55e;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #166534;
+            background: #f0fdf4;
+            padding: 1rem 1rem 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 2rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: #f9fafb;
+            color: #6b7f6b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer .brand {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GreenLedger — Complete Application Specification</h1>
+            <div class="subtitle">Comprehensive Technical Documentation</div>
+            <span class="part-badge">Part 1 of 3</span>
+        </div>
+
+        <div class="content">
+            <blockquote>
+                <strong>Purpose:</strong> This document is an exhaustive specification of the GreenLedger application. It contains enough detail for any AI app builder (Lovable, Bolt, Cursor, etc.) to recreate the entire application pixel-for-pixel and logic-for-logic with <strong>zero access to the original codebase</strong>.
+            </blockquote>
+
+            <h2>Table of Contents — Part 1</h2>
+            <ol>
+                <li>App Overview</li>
+                <li>Tech Stack & Dependencies</li>
+                <li>Environment Variables</li>
+                <li>File Structure</li>
+                <li>Database Schema</li>
+                <li>API Endpoints</li>
+            </ol>
+
+            <hr>
+
+            <h2>1. App Overview</h2>
+
+            <h3>What It Does</h3>
+            <p>GreenLedger is an AI-powered climate disclosure report generator for Australian businesses. Users enter their company details and greenhouse gas emissions data, and the app generates a complete <strong>AASB S2</strong> (aligned with <strong>IFRS S2</strong>) compliance report covering all four mandatory pillars:</p>
+
+            <ol>
+                <li><strong>Governance</strong> — Board oversight of climate risks</li>
+                <li><strong>Strategy</strong> — Climate risks/opportunities over short, medium, and long term</li>
+                <li><strong>Risk Management</strong> — Processes for identifying and managing climate risks</li>
+                <li><strong>Metrics & Targets</strong> — GHG emissions data (Scope 1, 2, 3) and reduction targets</li>
+            </ol>
+
+            <h3>Who It's For</h3>
+            <ul>
+                <li>Australian businesses required to comply with AASB S2 climate disclosure standards</li>
+                <li>CFOs, sustainability officers, and compliance teams</li>
+                <li>SMEs through to ASX-listed firms</li>
+                <li>Regional manufacturers, mining companies, logistics firms, and professional services</li>
+            </ul>
+
+            <h3>Core Value Proposition</h3>
+            <blockquote>
+                "Climate disclosure reports in minutes, not months."
+            </blockquote>
+            <p>Instead of spending months and tens of thousands on sustainability consultants, businesses enter their emissions data and get a board-ready AASB S2 report generated by AI in 30-60 seconds.</p>
+
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>NGA Emission Factors:</strong> Built-in Australian National Greenhouse Accounts factors for automatic CO2e calculations</li>
+                <li><strong>All Scopes Covered:</strong> Scope 1 (direct), Scope 2 (electricity), Scope 3 (value chain) — 23 source types</li>
+                <li><strong>State-Specific Electricity:</strong> Different emission factors for each Australian state/territory grid</li>
+                <li><strong>AI-Powered Report Generation:</strong> GPT-4o generates all four AASB S2 sections tailored to the company's actual data</li>
+                <li><strong>Board-Ready HTML Reports:</strong> Professional formatted reports that can be printed or saved as PDF</li>
+                <li><strong>No Authentication Required:</strong> Open access — no login, no signup. Just start entering data.</li>
+            </ul>
+
+            <hr>
+
+            <h2>2. Tech Stack & Dependencies</h2>
+
+            <h3>Backend</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Version</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Node.js</strong></td>
+                        <td>20.x</td>
+                        <td>Runtime</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Express.js</strong></td>
+                        <td>^4.18.2</td>
+                        <td>HTTP server & API framework</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pg</strong></td>
+                        <td>^8.11.3</td>
+                        <td>PostgreSQL client</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OpenAI SDK</strong></td>
+                        <td>^4.77.0</td>
+                        <td>GPT-4o API integration</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Database</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PostgreSQL</strong></td>
+                        <td>Primary database (via Supabase, Neon, or any Postgres provider)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Frontend</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vanilla HTML/CSS/JS</strong></td>
+                        <td>No framework — two static HTML files served by Express</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Google Fonts</strong></td>
+                        <td>DM Sans (body) + Space Grotesk (headings)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Deployment</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Configuration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vercel</strong> (primary)</td>
+                        <td>Serverless via <code>@vercel/node</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Any Node.js host</strong></td>
+                        <td>Traditional server mode (Render, Railway, etc.)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Complete package.json</h3>
+            <pre><code>{
+  "name": "greenledger",
+  "version": "1.0.0",
+  "main": "server.js",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "npm run migrate",
+    "migrate": "node migrate.js",
+    "vercel-build": "npm run migrate"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "openai": "^4.77.0",
+    "pg": "^8.11.3"
+  }
+}</code></pre>
+
+            <hr>
+
+            <h2>3. Environment Variables</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Required</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>DATABASE_URL</code></td>
+                        <td><strong>Yes</strong></td>
+                        <td>—</td>
+                        <td>PostgreSQL connection string (Supabase, Neon, or any Postgres). Example: <code>postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>OPENAI_API_KEY</code></td>
+                        <td><strong>Yes</strong></td>
+                        <td>—</td>
+                        <td>OpenAI API key (starts with <code>sk-</code>). Required for report generation.</td>
+                    </tr>
+                    <tr>
+                        <td><code>OPENAI_MODEL</code></td>
+                        <td>No</td>
+                        <td><code>gpt-4o</code></td>
+                        <td>OpenAI model to use. Options: <code>gpt-4o</code>, <code>gpt-4o-mini</code>, <code>gpt-4-turbo</code>, <code>gpt-3.5-turbo</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>PORT</code></td>
+                        <td>No</td>
+                        <td><code>3000</code></td>
+                        <td>HTTP server port. Vercel sets this automatically.</td>
+                    </tr>
+                    <tr>
+                        <td><code>NODE_ENV</code></td>
+                        <td>No</td>
+                        <td><code>development</code></td>
+                        <td>Environment mode (<code>production</code> or <code>development</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>VERCEL</code></td>
+                        <td>No</td>
+                        <td>—</td>
+                        <td>Auto-set by Vercel. When present, disables <code>app.listen()</code> (serverless mode).</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>SSL Behavior</h3>
+            <p>The database connection uses SSL with <code>rejectUnauthorized: false</code> for remote databases. If <code>DATABASE_URL</code> contains <code>localhost</code>, SSL is disabled entirely.</p>
+
+            <hr>
+
+            <h2>4. File Structure</h2>
+
+            <pre><code>greenledger/
+├── server.js                         # Express app entry point + all API routes
+├── migrate.js                        # Custom migration runner
+├── package.json                      # Dependencies and scripts
+├── vercel.json                       # Vercel deployment configuration
+├── .env.example                      # Environment variable template
+├── .gitignore                        # Git ignore rules
+├── README.md                         # Project documentation
+├── migrations/
+│   └── 1709524800000_create_greenledger_tables.js   # Initial schema migration
+├── lib/
+│   ├── ai.js                         # OpenAI SDK wrapper
+│   ├── emission-factors.js           # NGA emission factors + calculation engine
+│   └── report-generator.js           # AASB S2 report generation (AI prompts + HTML builder)
+└── public/
+    ├── index.html                    # Landing page (marketing)
+    └── app.html                      # Dashboard SPA (3-step wizard)</code></pre>
+
+            <hr>
+
+            <h2>5. Database Schema</h2>
+
+            <h3>Overview</h3>
+            <p>3 core tables + 1 system table, all managed via a custom migration runner.</p>
+
+            <h3>Table: _migrations (System)</h3>
+            <p>Tracks which migrations have been applied.</p>
+
+            <pre><code>CREATE TABLE IF NOT EXISTS _migrations (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td><code>SERIAL</code></td>
+                        <td><code>PRIMARY KEY</code></td>
+                        <td>Auto-incrementing ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td><code>VARCHAR(255)</code></td>
+                        <td><code>NOT NULL</code>, <code>UNIQUE</code></td>
+                        <td>Migration name</td>
+                    </tr>
+                    <tr>
+                        <td><code>applied_at</code></td>
+                        <td><code>TIMESTAMP</code></td>
+                        <td><code>DEFAULT CURRENT_TIMESTAMP</code></td>
+                        <td>When migration was applied</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Table: companies</h3>
+            <p>Stores company profiles used for report generation.</p>
+
+            <pre><code>CREATE TABLE IF NOT EXISTS companies (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  abn VARCHAR(20),
+  industry VARCHAR(100),
+  employee_count INTEGER,
+  financial_year VARCHAR(20) NOT NULL,
+  address TEXT,
+  contact_email VARCHAR(255),
+  contact_name VARCHAR(255),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);</code></pre>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td><code>SERIAL</code></td>
+                        <td><code>PRIMARY KEY</code></td>
+                        <td>Auto-incrementing ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td><code>VARCHAR(255)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Company legal name</td>
+                    </tr>
+                    <tr>
+                        <td><code>abn</code></td>
+                        <td><code>VARCHAR(20)</code></td>
+                        <td>nullable</td>
+                        <td>Australian Business Number</td>
+                    </tr>
+                    <tr>
+                        <td><code>industry</code></td>
+                        <td><code>VARCHAR(100)</code></td>
+                        <td>nullable</td>
+                        <td>Industry sector (from dropdown)</td>
+                    </tr>
+                    <tr>
+                        <td><code>employee_count</code></td>
+                        <td><code>INTEGER</code></td>
+                        <td>nullable</td>
+                        <td>Number of employees</td>
+                    </tr>
+                    <tr>
+                        <td><code>financial_year</code></td>
+                        <td><code>VARCHAR(20)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>e.g. "2024-2025"</td>
+                    </tr>
+                    <tr>
+                        <td><code>address</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>Business address</td>
+                    </tr>
+                    <tr>
+                        <td><code>contact_email</code></td>
+                        <td><code>VARCHAR(255)</code></td>
+                        <td>nullable</td>
+                        <td>Contact person email</td>
+                    </tr>
+                    <tr>
+                        <td><code>contact_name</code></td>
+                        <td><code>VARCHAR(255)</code></td>
+                        <td>nullable</td>
+                        <td>Contact person name</td>
+                    </tr>
+                    <tr>
+                        <td><code>created_at</code></td>
+                        <td><code>TIMESTAMPTZ</code></td>
+                        <td><code>DEFAULT NOW()</code></td>
+                        <td>Creation timestamp</td>
+                    </tr>
+                    <tr>
+                        <td><code>updated_at</code></td>
+                        <td><code>TIMESTAMPTZ</code></td>
+                        <td><code>DEFAULT NOW()</code></td>
+                        <td>Last update timestamp</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Table: emissions_data</h3>
+            <p>Individual emission line items linked to a company.</p>
+
+            <pre><code>CREATE TABLE IF NOT EXISTS emissions_data (
+  id SERIAL PRIMARY KEY,
+  company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
+  category VARCHAR(20) NOT NULL CHECK (category IN ('scope1', 'scope2', 'scope3')),
+  source_type VARCHAR(100) NOT NULL,
+  description TEXT,
+  quantity DECIMAL(15,4) NOT NULL,
+  unit VARCHAR(50) NOT NULL,
+  emission_factor DECIMAL(15,8),
+  co2e_tonnes DECIMAL(15,4),
+  period_start DATE,
+  period_end DATE,
+  data_source VARCHAR(50) DEFAULT 'manual',
+  raw_data JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);</code></pre>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td><code>SERIAL</code></td>
+                        <td><code>PRIMARY KEY</code></td>
+                        <td>Auto-incrementing ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>company_id</code></td>
+                        <td><code>INTEGER</code></td>
+                        <td><code>REFERENCES companies(id) ON DELETE CASCADE</code></td>
+                        <td>Parent company</td>
+                    </tr>
+                    <tr>
+                        <td><code>category</code></td>
+                        <td><code>VARCHAR(20)</code></td>
+                        <td><code>NOT NULL</code>, <code>CHECK IN ('scope1','scope2','scope3')</code></td>
+                        <td>Emission scope</td>
+                    </tr>
+                    <tr>
+                        <td><code>source_type</code></td>
+                        <td><code>VARCHAR(100)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Emission source key (e.g. <code>natural_gas</code>, <code>electricity_nsw</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>description</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>User description (e.g. "Office electricity - Sydney HQ")</td>
+                    </tr>
+                    <tr>
+                        <td><code>quantity</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Amount of activity data</td>
+                    </tr>
+                    <tr>
+                        <td><code>unit</code></td>
+                        <td><code>VARCHAR(50)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Unit of measurement (e.g. <code>kWh</code>, <code>L</code>, <code>km</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>emission_factor</code></td>
+                        <td><code>DECIMAL(15,8)</code></td>
+                        <td>nullable</td>
+                        <td>Applied emission factor (kg CO2e per unit)</td>
+                    </tr>
+                    <tr>
+                        <td><code>co2e_tonnes</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td>nullable</td>
+                        <td>Calculated CO2e in tonnes</td>
+                    </tr>
+                    <tr>
+                        <td><code>period_start</code></td>
+                        <td><code>DATE</code></td>
+                        <td>nullable</td>
+                        <td>Reporting period start</td>
+                    </tr>
+                    <tr>
+                        <td><code>period_end</code></td>
+                        <td><code>DATE</code></td>
+                        <td>nullable</td>
+                        <td>Reporting period end</td>
+                    </tr>
+                    <tr>
+                        <td><code>data_source</code></td>
+                        <td><code>VARCHAR(50)</code></td>
+                        <td><code>DEFAULT 'manual'</code></td>
+                        <td>How data was entered</td>
+                    </tr>
+                    <tr>
+                        <td><code>raw_data</code></td>
+                        <td><code>JSONB</code></td>
+                        <td>nullable</td>
+                        <td>Optional raw/original data</td>
+                    </tr>
+                    <tr>
+                        <td><code>created_at</code></td>
+                        <td><code>TIMESTAMPTZ</code></td>
+                        <td><code>DEFAULT NOW()</code></td>
+                        <td>Creation timestamp</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Indexes:</strong></p>
+            <pre><code>CREATE INDEX IF NOT EXISTS emissions_company_id_idx ON emissions_data(company_id);
+CREATE INDEX IF NOT EXISTS emissions_category_idx ON emissions_data(category);</code></pre>
+
+            <h3>Table: reports</h3>
+            <p>Generated AASB S2 climate disclosure reports.</p>
+
+            <pre><code>CREATE TABLE IF NOT EXISTS reports (
+  id SERIAL PRIMARY KEY,
+  company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  financial_year VARCHAR(20) NOT NULL,
+  status VARCHAR(50) DEFAULT 'generating' CHECK (status IN ('generating', 'completed', 'failed')),
+  report_html TEXT,
+  governance_section TEXT,
+  strategy_section TEXT,
+  risk_management_section TEXT,
+  metrics_targets_section TEXT,
+  total_scope1 DECIMAL(15,4) DEFAULT 0,
+  total_scope2 DECIMAL(15,4) DEFAULT 0,
+  total_scope3 DECIMAL(15,4) DEFAULT 0,
+  total_emissions DECIMAL(15,4) DEFAULT 0,
+  ai_model_used VARCHAR(100),
+  generated_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);</code></pre>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td><code>SERIAL</code></td>
+                        <td><code>PRIMARY KEY</code></td>
+                        <td>Auto-incrementing ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>company_id</code></td>
+                        <td><code>INTEGER</code></td>
+                        <td><code>REFERENCES companies(id) ON DELETE CASCADE</code></td>
+                        <td>Parent company</td>
+                    </tr>
+                    <tr>
+                        <td><code>title</code></td>
+                        <td><code>VARCHAR(255)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Report title (auto-generated)</td>
+                    </tr>
+                    <tr>
+                        <td><code>financial_year</code></td>
+                        <td><code>VARCHAR(20)</code></td>
+                        <td><code>NOT NULL</code></td>
+                        <td>Financial year from company</td>
+                    </tr>
+                    <tr>
+                        <td><code>status</code></td>
+                        <td><code>VARCHAR(50)</code></td>
+                        <td><code>DEFAULT 'generating'</code>, <code>CHECK IN ('generating','completed','failed')</code></td>
+                        <td>Generation status</td>
+                    </tr>
+                    <tr>
+                        <td><code>report_html</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>Complete HTML report document</td>
+                    </tr>
+                    <tr>
+                        <td><code>governance_section</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>AI-generated governance text (HTML)</td>
+                    </tr>
+                    <tr>
+                        <td><code>strategy_section</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>AI-generated strategy text (HTML)</td>
+                    </tr>
+                    <tr>
+                        <td><code>risk_management_section</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>AI-generated risk management text (HTML)</td>
+                    </tr>
+                    <tr>
+                        <td><code>metrics_targets_section</code></td>
+                        <td><code>TEXT</code></td>
+                        <td>nullable</td>
+                        <td>AI-generated metrics & targets text (HTML)</td>
+                    </tr>
+                    <tr>
+                        <td><code>total_scope1</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td><code>DEFAULT 0</code></td>
+                        <td>Total Scope 1 emissions (tCO2e)</td>
+                    </tr>
+                    <tr>
+                        <td><code>total_scope2</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td><code>DEFAULT 0</code></td>
+                        <td>Total Scope 2 emissions (tCO2e)</td>
+                    </tr>
+                    <tr>
+                        <td><code>total_scope3</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td><code>DEFAULT 0</code></td>
+                        <td>Total Scope 3 emissions (tCO2e)</td>
+                    </tr>
+                    <tr>
+                        <td><code>total_emissions</code></td>
+                        <td><code>DECIMAL(15,4)</code></td>
+                        <td><code>DEFAULT 0</code></td>
+                        <td>Grand total emissions (tCO2e)</td>
+                    </tr>
+                    <tr>
+                        <td><code>ai_model_used</code></td>
+                        <td><code>VARCHAR(100)</code></td>
+                        <td>nullable</td>
+                        <td>Which AI model generated it</td>
+                    </tr>
+                    <tr>
+                        <td><code>generated_at</code></td>
+                        <td><code>TIMESTAMPTZ</code></td>
+                        <td>nullable</td>
+                        <td>When generation completed</td>
+                    </tr>
+                    <tr>
+                        <td><code>created_at</code></td>
+                        <td><code>TIMESTAMPTZ</code></td>
+                        <td><code>DEFAULT NOW()</code></td>
+                        <td>Record creation time</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Indexes:</strong></p>
+            <pre><code>CREATE INDEX IF NOT EXISTS reports_company_id_idx ON reports(company_id);
+CREATE INDEX IF NOT EXISTS reports_status_idx ON reports(status);</code></pre>
+
+            <h3>Entity Relationship Diagram</h3>
+            <pre><code>companies (1) ──< (N) emissions_data
+companies (1) ──< (N) reports</code></pre>
+
+            <p>Both <code>emissions_data</code> and <code>reports</code> cascade delete when their parent company is deleted.</p>
+
+            <hr>
+
+            <h2>6. API Endpoints</h2>
+
+            <h3>Base Configuration</h3>
+            <ul>
+                <li><strong>JSON body parsing:</strong> <code>express.json({ limit: '5mb' })</code></li>
+                <li><strong>URL-encoded body parsing:</strong> <code>express.urlencoded({ extended: true })</code></li>
+                <li><strong>Static files:</strong> Served from <code>./public/</code> directory</li>
+                <li><strong>Trust proxy:</strong> Enabled (<code>app.set('trust proxy', 1)</code>)</li>
+                <li><strong>No authentication:</strong> All endpoints are public (no JWT, no sessions)</li>
+            </ul>
+
+            <hr>
+
+            <h3>GET /health</h3>
+            <p>Health check endpoint with database connectivity test.</p>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "status": "healthy",
+  "database": "connected"
+}</code></pre>
+
+            <p><strong>Response (503) — DB disconnected:</strong></p>
+            <pre><code>{
+  "status": "unhealthy",
+  "database": "disconnected",
+  "error": "connection refused"
+}</code></pre>
+
+            <hr>
+
+            <h3>GET /api/emission-factors</h3>
+            <p>Returns all available emission source types organized by scope.</p>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "sourceTypes": {
+    "scope1": [
+      { "key": "natural_gas", "unit": "GJ", "description": "Natural gas combustion", "factor": 51.53 },
+      { "key": "diesel", "unit": "L", "description": "Diesel fuel combustion", "factor": 2.7006 }
+    ],
+    "scope2": [
+      { "key": "electricity_nsw", "unit": "kWh", "description": "Grid electricity - NSW/ACT", "factor": 0.79 }
+    ],
+    "scope3": [
+      { "key": "business_travel_air_domestic", "unit": "km", "description": "Domestic air travel", "factor": 0.195 }
+    ]
+  }
+}</code></pre>
+
+            <hr>
+
+            <h3>POST /api/companies</h3>
+            <p>Create a new company profile.</p>
+
+            <p><strong>Request Body:</strong></p>
+            <pre><code>{
+  "name": "Acme Manufacturing Pty Ltd",
+  "abn": "12 345 678 901",
+  "industry": "Manufacturing",
+  "employee_count": 150,
+  "financial_year": "2024-2025",
+  "address": "123 Collins St, Melbourne VIC 3000",
+  "contact_email": "cfo@acme.com.au",
+  "contact_name": "Jane Smith"
+}</code></pre>
+
+            <p><strong>Required fields:</strong> <code>name</code>, <code>financial_year</code><br>
+            <strong>Optional fields:</strong> <code>abn</code>, <code>industry</code>, <code>employee_count</code>, <code>address</code>, <code>contact_email</code>, <code>contact_name</code></p>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "company": {
+    "id": 1,
+    "name": "Acme Manufacturing Pty Ltd",
+    "abn": "12 345 678 901",
+    "industry": "Manufacturing",
+    "employee_count": 150,
+    "financial_year": "2024-2025",
+    "address": "123 Collins St, Melbourne VIC 3000",
+    "contact_email": "cfo@acme.com.au",
+    "contact_name": "Jane Smith",
+    "created_at": "2026-01-15T10:30:00.000Z",
+    "updated_at": "2026-01-15T10:30:00.000Z"
+  }
+}</code></pre>
+
+            <p><strong>Response (400):</strong></p>
+            <pre><code>{ "error": "Company name and financial year are required" }</code></pre>
+
+            <p><strong>Response (500):</strong></p>
+            <pre><code>{ "error": "Failed to create company" }</code></pre>
+
+            <hr>
+
+            <h3>GET /api/companies</h3>
+            <p>List all companies, ordered by creation date (newest first).</p>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "companies": [
+    { "id": 1, "name": "Acme Manufacturing", "financial_year": "2024-2025", ... }
+  ]
+}</code></pre>
+
+            <hr>
+
+            <h3>GET /api/companies/:id</h3>
+            <p>Get a single company by ID.</p>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "company": { "id": 1, "name": "Acme Manufacturing", ... }
+}</code></pre>
+
+            <p><strong>Response (404):</strong></p>
+            <pre><code>{ "error": "Company not found" }</code></pre>
+
+            <hr>
+
+            <h3>POST /api/companies/:companyId/emissions</h3>
+            <p>Add one or more emission records to a company. Accepts a single object or an array.</p>
+
+            <p><strong>Request Body (single):</strong></p>
+            <pre><code>{
+  "category": "scope2",
+  "source_type": "electricity_nsw",
+  "quantity": 50000,
+  "unit": "kWh",
+  "description": "Office electricity - Sydney HQ",
+  "period_start": "2024-07-01",
+  "period_end": "2025-06-30",
+  "data_source": "manual"
+}</code></pre>
+
+            <p><strong>Request Body (batch):</strong></p>
+            <pre><code>[
+  { "category": "scope1", "source_type": "natural_gas", "quantity": 1200, "unit": "GJ" },
+  { "category": "scope2", "source_type": "electricity_vic", "quantity": 35000, "unit": "kWh" }
+]</code></pre>
+
+            <p><strong>Required fields per item:</strong> <code>category</code>, <code>source_type</code>, <code>quantity</code>, <code>unit</code></p>
+
+            <p><strong>Server-side behavior:</strong></p>
+            <ol>
+                <li>Validates the company exists</li>
+                <li>For each item, calls <code>calculateEmissions(category, source_type, quantity)</code></li>
+                <li>If a matching NGA factor exists, auto-calculates <code>co2e_tonnes</code> and <code>emission_factor</code></li>
+                <li>If no matching factor, falls back to <code>item.co2e_tonnes</code> or <code>item.emission_factor</code> from the request body, or <code>null</code></li>
+                <li>Inserts into <code>emissions_data</code></li>
+            </ol>
+
+            <p><strong>Response (200):</strong></p>
+            <pre><code>{
+  "emissions": [
+    {
+      "id": 1,
+      "company_id": 1,
+      "category": "scope2",
+      "source_type": "electricity_nsw",
+      "quantity": "50000.0000",
+      "unit": "kWh",
+      "emission_factor": "0.79000000",
+      "co2e_tonnes": "39.5000",
+      "period_start": "2024-07-01",
+      "period_end": "2025-06-30",
+      "data_source": "manual",
+      "created_at": "2026-01-15T10:35:00.000Z"
+    }
+  ]
+}</code></pre>
+
+            <hr>
+
+            <p><em>Continued in Part 2...</em></p>
+
+        </div>
+
+        <div class="footer">
+            <p><strong>Part 1 of 3</strong> — Sections 1-6 (Overview through API Endpoints)</p>
+            <p>Generated by <span class="brand">GreenLedger</span> • March 5, 2026</p>
+        </div>
+    </div>
+</body>
+</html>

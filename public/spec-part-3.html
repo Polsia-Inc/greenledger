@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLedger Spec — Part 3 of 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f5f7fa;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a0f0a 0%, #162016 100%);
+            color: #f0fdf4;
+            padding: 3rem 2.5rem;
+            border-bottom: 4px solid #22c55e;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #86efac;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .part-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .content {
+            padding: 2.5rem;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #166534;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 3px solid #22c55e;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #166534;
+            border-bottom: 2px solid #bbf7d0;
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: #166534;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: #16a34a;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        code {
+            background: #f0fdf4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        pre {
+            background: #0a0f0a;
+            color: #86efac;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #22c55e;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            color: #86efac;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: #166534;
+            color: white;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        blockquote {
+            border-left: 4px solid #22c55e;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #166534;
+            background: #f0fdf4;
+            padding: 1rem 1rem 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 2rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: #f9fafb;
+            color: #6b7f6b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer .brand {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GreenLedger — Complete Application Specification</h1>
+            <div class="subtitle">Comprehensive Technical Documentation</div>
+            <span class="part-badge">Part 3 of 3</span>
+        </div>
+
+        <div class="content">
+            <h2>Table of Contents — Part 3</h2>
+            <ol start="11">
+                <li>Report HTML Output</li>
+                <li>Design System & Styling</li>
+                <li>Step-by-Step User Journey</li>
+                <li>Error Handling & Validation</li>
+                <li>Deployment Configuration</li>
+                <li>Migration System</li>
+            </ol>
+            <p><strong>Appendices:</strong></p>
+            <ul>
+                <li>Appendix A: Complete Emission Factors Data Structure</li>
+                <li>Appendix B: Full Report HTML Template</li>
+                <li>Appendix C: Third-Party Libraries & Services</li>
+            </ul>
+
+            <hr>
+
+            <h2>11. Report HTML Output</h2>
+
+            <p>The generated report is a <strong>self-contained HTML document</strong> with inline CSS. No external dependencies except Google Fonts.</p>
+
+            <h3>Report Structure</h3>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;AASB S2 Climate Disclosure — {company.name}&lt;/title&gt;
+  &lt;link href="https://fonts.googleapis.com/css2?family=DM+Sans..." rel="stylesheet"&gt;
+  &lt;style&gt;/* inline styles */&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="report-container"&gt;
+    &lt;!-- Header: Dark green gradient background --&gt;
+    &lt;div class="report-header"&gt;
+      &lt;h1&gt;Climate-Related Financial Disclosures&lt;/h1&gt;
+      &lt;div class="subtitle"&gt;AASB S2 Compliance Report&lt;/div&gt;
+      &lt;div class="meta"&gt;
+        &lt;strong&gt;{company.name}&lt;/strong&gt; | ABN: {company.abn}
+        Financial Year: {financial_year} | Generated: {date}
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Summary Cards: 4-column grid --&gt;
+    &lt;div class="summary-cards"&gt;...&lt;/div&gt;
+
+    &lt;!-- Section 1: Governance (AI-generated HTML) --&gt;
+    &lt;div class="section"&gt;
+      &lt;h2 class="section-header"&gt;1. Governance&lt;/h2&gt;
+      {governance section HTML}
+    &lt;/div&gt;
+
+    &lt;!-- Sections 2-4... --&gt;
+
+    &lt;!-- Footer --&gt;
+    &lt;div class="report-footer"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>Report Date Format</h3>
+            <pre><code>new Date().toLocaleDateString('en-AU', {
+  year: 'numeric', month: 'long', day: 'numeric'
+})
+// Output: "15 January 2026"</code></pre>
+
+            <h3>Print Styles</h3>
+            <p>The report includes <code>@media print</code> rules:</p>
+            <ul>
+                <li>Body padding removed</li>
+                <li>Report container padding reduced to 1rem</li>
+                <li>Header: <code>break-after: avoid</code></li>
+                <li>Sections: <code>break-inside: avoid</code></li>
+            </ul>
+
+            <hr>
+
+            <h2>12. Design System & Styling</h2>
+
+            <h3>Color Palette</h3>
+            <p>All colors are defined as CSS custom properties in <code>:root</code>:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Hex Value</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--bg-deep</code></td>
+                        <td><code>#0a0f0a</code></td>
+                        <td>Page background (very dark green-black)</td>
+                    </tr>
+                    <tr>
+                        <td><code>--bg-card</code></td>
+                        <td><code>#111a11</code></td>
+                        <td>Card backgrounds</td>
+                    </tr>
+                    <tr>
+                        <td><code>--bg-subtle</code></td>
+                        <td><code>#162016</code></td>
+                        <td>Input backgrounds, subtle cards</td>
+                    </tr>
+                    <tr>
+                        <td><code>--green-primary</code></td>
+                        <td><code>#22c55e</code></td>
+                        <td>Primary action color, highlights, CTA buttons</td>
+                    </tr>
+                    <tr>
+                        <td><code>--green-dim</code></td>
+                        <td><code>#166534</code></td>
+                        <td>Section headers, dark green accents</td>
+                    </tr>
+                    <tr>
+                        <td><code>--text-primary</code></td>
+                        <td><code>#f0fdf4</code></td>
+                        <td>Main text (very light green-white)</td>
+                    </tr>
+                    <tr>
+                        <td><code>--text-secondary</code></td>
+                        <td><code>#86efac</code></td>
+                        <td>Secondary text, labels</td>
+                    </tr>
+                    <tr>
+                        <td><code>--danger</code></td>
+                        <td><code>#ef4444</code></td>
+                        <td>Delete buttons, error states</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Typography</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Font Family</th>
+                        <th>Weight</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>DM Sans</strong></td>
+                        <td>400, 500, 600, 700</td>
+                        <td>Body text, form labels, buttons, descriptions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space Grotesk</strong></td>
+                        <td>500, 600, 700</td>
+                        <td>Headings (h1-h4), metric values, logo</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Google Fonts URL:</strong></p>
+            <pre><code>https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap</code></pre>
+
+            <h3>Responsive Breakpoints</h3>
+            <p>Single breakpoint at <code>768px</code>:</p>
+            <pre><code>@media (max-width: 768px) {
+  nav { padding: 1rem; }
+  .features-grid { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr 1fr; }
+}</code></pre>
+
+            <h3>Animations</h3>
+            <ol>
+                <li><strong>Pulse animation</strong> (hero badge green dot):
+                    <pre><code>@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+/* Applied with: animation: pulse 2s infinite; */</code></pre>
+                </li>
+                <li><strong>Spinner animation</strong> (loading indicators):
+                    <pre><code>@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* Applied with: animation: spin 0.7s linear infinite; */</code></pre>
+                </li>
+                <li><strong>Hover transitions</strong>: All interactive elements use <code>transition: all 0.2s</code></li>
+            </ol>
+
+            <hr>
+
+            <h2>13. Step-by-Step User Journey</h2>
+
+            <h3>1. Landing Page (/)</h3>
+            <p>User arrives at the dark-themed landing page. They see:</p>
+            <ul>
+                <li>Hero section explaining what GreenLedger does</li>
+                <li>Feature cards showing capabilities</li>
+                <li>AASB S2 framework explanation with the 4 pillars</li>
+                <li>Multiple CTA buttons all pointing to <code>/app</code></li>
+            </ul>
+
+            <h3>2. Click "Get Started"</h3>
+            <p>User navigates to <code>/app</code>. The dashboard loads with Step 1 (Company Profile) active.</p>
+
+            <h3>3. Create Company Profile (Step 1)</h3>
+            <ul>
+                <li>User fills in company details (Company Name required, Financial Year required)</li>
+                <li>Clicks "Save & Continue"</li>
+                <li>Spinner shows "Saving..."</li>
+                <li>Company is saved via <code>POST /api/companies</code></li>
+                <li>Toast: "Company profile saved"</li>
+                <li>Auto-navigates to Step 2 after 500ms</li>
+            </ul>
+
+            <p><strong>OR</strong> if returning user:</p>
+            <ul>
+                <li>Existing companies appear in "Your Companies" card</li>
+                <li>User clicks "Select" on an existing company</li>
+                <li>Form populates with company data</li>
+            </ul>
+
+            <h3>4. Enter Emissions Data (Step 2)</h3>
+            <ul>
+                <li>User sees 4 metric cards (all showing 0 initially)</li>
+                <li>User fills in the "Add Emission Source" form:
+                    <ul>
+                        <li>Selects Scope (Scope 1, 2, or 3)</li>
+                        <li>Source Type dropdown populates based on scope</li>
+                        <li>Unit field auto-fills (readonly)</li>
+                        <li>Enters Quantity</li>
+                        <li>Optionally sets Period Start/End and Description</li>
+                    </ul>
+                </li>
+                <li>Clicks "Add Emission"</li>
+                <li>Emission saved via <code>POST /api/companies/:id/emissions</code></li>
+                <li>Table updates showing the new record with calculated tCO2e</li>
+                <li>Metric cards update with new totals</li>
+                <li>User repeats for all emission sources</li>
+                <li>User clicks "Continue to Report →"</li>
+            </ul>
+
+            <h3>5. Generate Report (Step 3)</h3>
+            <ul>
+                <li>User clicks "Generate AASB S2 Report"</li>
+                <li>Button disables, spinner shows "Generating report (30-60s)..."</li>
+                <li><code>POST /api/companies/:id/reports/generate</code> fires</li>
+                <li>Server creates report record with <code>status: 'generating'</code></li>
+                <li>Server makes 4 parallel OpenAI API calls</li>
+                <li>After ~30-60 seconds, server responds with completed report</li>
+                <li>Client starts polling every 3 seconds</li>
+                <li>When <code>status: 'completed'</code>:
+                    <ul>
+                        <li>Toast: "Your AASB S2 report is ready!"</li>
+                        <li>Report appears in list with green "completed" badge</li>
+                        <li>"View Report" button appears</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>6. View/Print Report</h3>
+            <ul>
+                <li>User clicks "View Report"</li>
+                <li>Opens <code>/api/reports/:id/html</code> in a new browser tab</li>
+                <li>Full AASB S2 report renders with:
+                    <ul>
+                        <li>Dark header with company name, ABN, financial year</li>
+                        <li>4 summary cards with scope totals</li>
+                        <li>Governance section</li>
+                        <li>Strategy section</li>
+                        <li>Risk Management section</li>
+                        <li>Metrics & Targets section (includes data tables)</li>
+                        <li>Footer with compliance statement</li>
+                    </ul>
+                </li>
+                <li>User can <code>Ctrl+P</code> / <code>Cmd+P</code> to print or save as PDF (print styles are included)</li>
+            </ul>
+
+            <hr>
+
+            <h2>14. Error Handling & Validation</h2>
+
+            <h3>Server-Side Validation</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Validation</th>
+                        <th>Error Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>POST /api/companies</code></td>
+                        <td><code>name</code> and <code>financial_year</code> required</td>
+                        <td><code>400: "Company name and financial year are required"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>POST /api/companies/:id/emissions</code></td>
+                        <td>Company must exist</td>
+                        <td><code>404: "Company not found"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>POST /api/companies/:id/emissions</code></td>
+                        <td>Each item needs <code>category</code>, <code>source_type</code>, <code>quantity</code>, <code>unit</code></td>
+                        <td><code>400: "category, source_type, quantity, and unit are required for each item"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>POST /api/companies/:id/reports/generate</code></td>
+                        <td>Emissions must exist</td>
+                        <td><code>400: "No emissions data found. Add emissions data before generating a report."</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET /api/reports/:id/html</code></td>
+                        <td>Status must be <code>completed</code></td>
+                        <td><code>400: "Report not ready yet"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Server-Side Error Pattern</h3>
+            <p>All route handlers use try/catch with generic 500 errors:</p>
+            <pre><code>try {
+  // ... handler logic
+} catch (err) {
+  console.error('Descriptive error:', err);
+  res.status(500).json({ error: 'Failed to {action}' });
+}</code></pre>
+
+            <h3>Report Generation Failure</h3>
+            <p>If AI generation fails:</p>
+            <ol>
+                <li>Report status updated to <code>'failed'</code> in database</li>
+                <li>Response includes <code>{ report: { id, status: 'failed' }, error: genErr.message }</code></li>
+                <li>Client shows "Generation failed. Try again." status text</li>
+            </ol>
+
+            <h3>Client-Side Error Handling</h3>
+            <ul>
+                <li>All <code>fetch()</code> calls are wrapped in try/catch</li>
+                <li>Errors logged to <code>console.error</code></li>
+                <li>User-facing errors shown via <code>toast()</code> notification</li>
+                <li>Form buttons re-enabled after error</li>
+            </ul>
+
+            <h3>Client-Side Validation</h3>
+            <ul>
+                <li>HTML5 <code>required</code> attribute on Company Name, Financial Year, Scope, Source Type, Quantity</li>
+                <li><code>type="email"</code> on Contact Email field</li>
+                <li><code>type="number"</code> with <code>min="0"</code> and <code>step="any"</code> on Quantity field</li>
+                <li><code>maxlength="20"</code> on ABN field</li>
+                <li>No company check: Steps 2 and 3 show "Create a company first" empty state if <code>currentCompany</code> is null</li>
+            </ul>
+
+            <hr>
+
+            <h2>15. Deployment Configuration</h2>
+
+            <h3>Vercel Configuration (vercel.json)</h3>
+            <pre><code>{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
+}</code></pre>
+
+            <ul>
+                <li>All requests route to <code>server.js</code> (Express handles routing)</li>
+                <li><code>/public/*</code> files served as static assets</li>
+                <li>Build step runs <code>npm run vercel-build</code> which triggers <code>npm run migrate</code></li>
+            </ul>
+
+            <h3>Serverless Detection</h3>
+            <pre><code>// Start server — skipped when running on Vercel (serverless)
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`GreenLedger running on port ${port}`);
+  });
+}
+module.exports = app;</code></pre>
+
+            <h3>NPM Scripts</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Script</th>
+                        <th>Command</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>start</code></td>
+                        <td><code>node server.js</code></td>
+                        <td>Production server</td>
+                    </tr>
+                    <tr>
+                        <td><code>dev</code></td>
+                        <td><code>node server.js</code></td>
+                        <td>Development server (same as start)</td>
+                    </tr>
+                    <tr>
+                        <td><code>build</code></td>
+                        <td><code>npm run migrate</code></td>
+                        <td>Build step (runs migrations)</td>
+                    </tr>
+                    <tr>
+                        <td><code>migrate</code></td>
+                        <td><code>node migrate.js</code></td>
+                        <td>Run database migrations</td>
+                    </tr>
+                    <tr>
+                        <td><code>vercel-build</code></td>
+                        <td><code>npm run migrate</code></td>
+                        <td>Vercel-specific build (runs migrations)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr>
+
+            <h2>16. Migration System</h2>
+
+            <h3>Overview</h3>
+            <p>Custom migration runner in <code>migrate.js</code>. Not using any migration library — pure Node.js + <code>pg</code>.</p>
+
+            <h3>How It Works</h3>
+            <ol>
+                <li>Creates <code>_migrations</code> tracking table (idempotent)</li>
+                <li>Reads all <code>.js</code> files from <code>migrations/</code> folder, sorted alphabetically</li>
+                <li>Checks which migrations have already been applied (by name in <code>_migrations</code>)</li>
+                <li>Runs new migrations in a transaction (BEGIN → up() → INSERT into _migrations → COMMIT)</li>
+                <li>On failure: ROLLBACK and throw error</li>
+            </ol>
+
+            <h3>Migration File Format</h3>
+            <pre><code>module.exports = {
+  name: 'create_greenledger_tables',  // Must be unique
+  up: async (client) => {
+    // client is a pg Client (from pool.connect())
+    await client.query(`CREATE TABLE IF NOT EXISTS ...`);
+  }
+};</code></pre>
+
+            <h3>File Naming Convention</h3>
+            <pre><code>{unix_timestamp_ms}_{descriptive_name}.js</code></pre>
+            <p>Example: <code>1709524800000_create_greenledger_tables.js</code></p>
+
+            <h3>Current Migrations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>1709524800000_create_greenledger_tables.js</code></td>
+                        <td><code>create_greenledger_tables</code></td>
+                        <td>Creates <code>companies</code>, <code>emissions_data</code>, <code>reports</code> tables with indexes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>All <code>CREATE TABLE</code> statements use <code>IF NOT EXISTS</code> for idempotency. All <code>CREATE INDEX</code> statements use <code>IF NOT EXISTS</code>.</p>
+
+            <hr>
+
+            <h2>Appendix A: Complete Emission Factors Data Structure</h2>
+
+            <pre><code>const EMISSION_FACTORS = {
+  scope1: {
+    natural_gas:        { factor: 51.53,  unit: 'GJ',  description: 'Natural gas combustion' },
+    diesel:             { factor: 2.7006, unit: 'L',   description: 'Diesel fuel combustion' },
+    petrol:             { factor: 2.3292, unit: 'L',   description: 'Petrol fuel combustion' },
+    lpg:                { factor: 1.5441, unit: 'L',   description: 'LPG combustion' },
+    fleet_diesel:       { factor: 2.7006, unit: 'L',   description: 'Fleet vehicle - diesel' },
+    fleet_petrol:       { factor: 2.3292, unit: 'L',   description: 'Fleet vehicle - petrol' },
+    refrigerant_r410a:  { factor: 2088,   unit: 'kg',  description: 'Refrigerant R-410A leakage' },
+    refrigerant_r134a:  { factor: 1430,   unit: 'kg',  description: 'Refrigerant R-134a leakage' },
+  },
+  scope2: {
+    electricity_nsw:      { factor: 0.79, unit: 'kWh', description: 'Grid electricity - NSW/ACT' },
+    electricity_vic:      { factor: 1.02, unit: 'kWh', description: 'Grid electricity - VIC' },
+    electricity_qld:      { factor: 0.80, unit: 'kWh', description: 'Grid electricity - QLD' },
+    electricity_sa:       { factor: 0.35, unit: 'kWh', description: 'Grid electricity - SA' },
+    electricity_wa:       { factor: 0.68, unit: 'kWh', description: 'Grid electricity - WA' },
+    electricity_tas:      { factor: 0.17, unit: 'kWh', description: 'Grid electricity - TAS' },
+    electricity_nt:       { factor: 0.60, unit: 'kWh', description: 'Grid electricity - NT' },
+    electricity_national: { factor: 0.73, unit: 'kWh', description: 'Grid electricity - National average' },
+  },
+  scope3: {
+    business_travel_air_domestic:      { factor: 0.195, unit: 'km',     description: 'Domestic air travel' },
+    business_travel_air_international: { factor: 0.115, unit: 'km',     description: 'International air travel' },
+    employee_commute_car:              { factor: 0.171, unit: 'km',     description: 'Employee commute by car' },
+    waste_landfill:                    { factor: 1.1,   unit: 'tonnes', description: 'Waste to landfill' },
+    waste_recycled:                    { factor: 0.021, unit: 'tonnes', description: 'Waste recycled' },
+    water_supply:                      { factor: 0.394, unit: 'kL',    description: 'Water supply & treatment' },
+    paper:                             { factor: 0.919, unit: 'tonnes', description: 'Paper consumption' },
+  }
+};</code></pre>
+
+            <hr>
+
+            <h2>Appendix B: Full Report HTML Template</h2>
+
+            <p>The <code>buildReportHtml()</code> function generates a complete self-contained HTML document. The inline CSS is included in the report output.</p>
+
+            <p><strong>Key implementation detail:</strong> The function uses JavaScript template literals to inject:</p>
+            <ul>
+                <li><code>company.name</code> — in title, header, and ABN display</li>
+                <li><code>company.abn</code> — conditionally shown with " | ABN: " prefix</li>
+                <li><code>company.financial_year</code> — in header meta</li>
+                <li><code>totals.scope1/scope2/scope3/total</code> — formatted with <code>.toFixed(1)</code> in summary cards</li>
+                <li><code>sections.governance/strategy/riskManagement/metricsTargets</code> — raw HTML from OpenAI injected directly</li>
+                <li>Generated date — formatted as "15 January 2026" (en-AU locale)</li>
+            </ul>
+
+            <hr>
+
+            <h2>Appendix C: Third-Party Libraries & Services</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Version</th>
+                        <th>License</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>express</code></td>
+                        <td>^4.18.2</td>
+                        <td>MIT</td>
+                        <td>HTTP server, routing, middleware</td>
+                    </tr>
+                    <tr>
+                        <td><code>pg</code></td>
+                        <td>^8.11.3</td>
+                        <td>MIT</td>
+                        <td>PostgreSQL client</td>
+                    </tr>
+                    <tr>
+                        <td><code>openai</code></td>
+                        <td>^4.77.0</td>
+                        <td>Apache-2.0</td>
+                        <td>OpenAI API SDK</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>External Services</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OpenAI API</strong></td>
+                        <td>GPT-4o for generating report sections</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PostgreSQL</strong> (Supabase/Neon/any)</td>
+                        <td>Data storage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Google Fonts CDN</strong></td>
+                        <td>DM Sans + Space Grotesk fonts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vercel</strong> (optional)</td>
+                        <td>Serverless deployment</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Total dependencies: 3</strong> (express, pg, openai). No dev dependencies. No build tools. No bundlers. No CSS preprocessors. No frontend frameworks.</p>
+
+            <hr>
+
+            <p><em>Generated on 2026-03-04. This specification covers GreenLedger v1.0.0.</em></p>
+
+        </div>
+
+        <div class="footer">
+            <p><strong>Part 3 of 3</strong> — Sections 11-16 (Report Output through Migration System) + Appendices A-C</p>
+            <p>Generated by <span class="brand">GreenLedger</span> • March 5, 2026</p>
+        </div>
+    </div>
+</body>
+</html>
