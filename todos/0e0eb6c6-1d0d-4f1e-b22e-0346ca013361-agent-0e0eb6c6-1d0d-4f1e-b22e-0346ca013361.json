@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Fetch and prepare all 3 documents (competitive analysis, mission, market research)",
+    "status": "completed",
+    "activeForm": "Fetching and preparing documents"
+  },
+  {
+    "content": "Create styled HTML file for Competitive Analysis report",
+    "status": "completed",
+    "activeForm": "Creating styled HTML for Competitive Analysis"
+  },
+  {
+    "content": "Create styled HTML file for Mission document",
+    "status": "completed",
+    "activeForm": "Creating styled HTML for Mission"
+  },
+  {
+    "content": "Create styled HTML file for Market Research report",
+    "status": "completed",
+    "activeForm": "Creating styled HTML for Market Research"
+  },
+  {
+    "content": "Deploy HTML files to app and push to remote",
+    "status": "in_progress",
+    "activeForm": "Deploying HTML files"
+  },
+  {
+    "content": "Send email with all 3 download links",
+    "status": "pending",
+    "activeForm": "Sending email with download links"
+  }
+]
