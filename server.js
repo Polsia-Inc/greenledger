@@ -26,6 +26,83 @@ const pool = new Pool({
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// =============================================
+// In-memory visitor counter (flushed hourly)
+// =============================================
+let visitorCount = 0;
+
+// Count landing page hits (exclude /health, /api/*, /app*)
+app.use((req, res, next) => {
+  const p = req.path;
+  if (p === '/' || (p.startsWith('/') && !p.startsWith('/api') && !p.startsWith('/health') && !p.startsWith('/app') && !p.includes('.'))) {
+    visitorCount++;
+  }
+  next();
+});
+
+// Helper: get today's date as YYYY-MM-DD
+function todayDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Flush in-memory visitor count into metrics table for today
+async function flushVisitors() {
+  if (visitorCount === 0) return;
+  const count = visitorCount;
+  visitorCount = 0;
+  const today = todayDate();
+  try {
+    await pool.query(`
+      INSERT INTO metrics (metric_date, visitors)
+      VALUES ($1, $2)
+      ON CONFLICT (metric_date) DO UPDATE
+        SET visitors = metrics.visitors + $2,
+            updated_at = NOW()
+    `, [today, count]);
+    console.log(`[Metrics] Flushed ${count} visitor(s) for ${today}`);
+  } catch (err) {
+    // Put count back if flush fails
+    visitorCount += count;
+    console.error('[Metrics] Flush visitors failed:', err.message);
+  }
+}
+
+// Capture a daily snapshot: count signups, companies, reports from source tables
+async function takeDailySnapshot(date) {
+  const d = date || todayDate();
+  try {
+    const signupsResult = await pool.query(`SELECT COUNT(*) AS cnt FROM companies WHERE DATE(created_at) = $1`, [d]);
+    const companiesResult = await pool.query(`SELECT COUNT(*) AS cnt FROM companies WHERE DATE(created_at) = $1`, [d]);
+    const reportsResult = await pool.query(`SELECT COUNT(*) AS cnt FROM reports WHERE DATE(created_at) = $1 AND status = 'completed'`, [d]);
+
+    // Get current visitor count for today (already in DB after flush)
+    const visitorsResult = await pool.query(`SELECT COALESCE(visitors, 0) AS visitors FROM metrics WHERE metric_date = $1`, [d]);
+    const visitors = parseInt(visitorsResult.rows[0]?.visitors || 0, 10);
+
+    const signups = parseInt(signupsResult.rows[0].cnt, 10);
+    const companiesCreated = parseInt(companiesResult.rows[0].cnt, 10);
+    const reportsGenerated = parseInt(reportsResult.rows[0].cnt, 10);
+    const conversionRate = visitors > 0 ? parseFloat(((signups / visitors) * 100).toFixed(4)) : 0;
+
+    await pool.query(`
+      INSERT INTO metrics (metric_date, visitors, signups, companies_created, reports_generated, conversion_rate)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      ON CONFLICT (metric_date) DO UPDATE
+        SET signups = $3,
+            companies_created = $4,
+            reports_generated = $5,
+            conversion_rate = $6,
+            updated_at = NOW()
+    `, [d, visitors, signups, companiesCreated, reportsGenerated, conversionRate]);
+
+    console.log(`[Metrics] Daily snapshot for ${d}: visitors=${visitors}, signups=${signups}, companies=${companiesCreated}, reports=${reportsGenerated}, cvr=${conversionRate}%`);
+    return { metric_date: d, visitors, signups, companies_created: companiesCreated, reports_generated: reportsGenerated, conversion_rate: conversionRate };
+  } catch (err) {
+    console.error('[Metrics] Daily snapshot failed:', err.message);
+    throw err;
+  }
+}
+
 // Health check (with DB connectivity)
 app.get('/health', async (req, res) => {
   try {
@@ -260,6 +337,67 @@ app.get('/api/reports/:id/html', async (req, res) => {
   }
 });
 
+// --- Metrics ---
+
+// GET /api/metrics — current day + last 30 days historical
+app.get('/api/metrics', async (req, res) => {
+  try {
+    const today = todayDate();
+
+    // Flush latest visitor count before returning
+    await flushVisitors();
+
+    const result = await pool.query(`
+      SELECT metric_date, visitors, signups, companies_created, reports_generated, conversion_rate, updated_at
+      FROM metrics
+      ORDER BY metric_date DESC
+      LIMIT 30
+    `);
+
+    // Build today's live summary from source tables (so it's always fresh even before first snapshot)
+    const todayVisitors = result.rows.find(r => r.metric_date?.toISOString?.()?.slice(0,10) === today || r.metric_date === today);
+
+    const totalCompanies = await pool.query('SELECT COUNT(*) AS cnt FROM companies');
+    const totalReports = await pool.query("SELECT COUNT(*) AS cnt FROM reports WHERE status = 'completed'");
+    const todayCompanies = await pool.query('SELECT COUNT(*) AS cnt FROM companies WHERE DATE(created_at) = $1', [today]);
+    const todayReports = await pool.query("SELECT COUNT(*) AS cnt FROM reports WHERE DATE(created_at) = $1 AND status = 'completed'", [today]);
+
+    const summary = {
+      today: {
+        date: today,
+        visitors: parseInt(todayVisitors?.visitors || 0, 10),
+        signups: parseInt(todayCompanies.rows[0].cnt, 10),
+        companies_created: parseInt(todayCompanies.rows[0].cnt, 10),
+        reports_generated: parseInt(todayReports.rows[0].cnt, 10),
+      },
+      totals: {
+        companies: parseInt(totalCompanies.rows[0].cnt, 10),
+        reports_generated: parseInt(totalReports.rows[0].cnt, 10),
+      },
+      history: result.rows,
+    };
+
+    res.json({ success: true, metrics: summary });
+  } catch (err) {
+    console.error('GET /api/metrics error:', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch metrics' });
+  }
+});
+
+// POST /api/metrics/snapshot — capture today's counts and persist
+app.post('/api/metrics/snapshot', async (req, res) => {
+  try {
+    // Flush visitors first so snapshot sees latest count
+    await flushVisitors();
+    const date = req.body?.date || todayDate();
+    const snapshot = await takeDailySnapshot(date);
+    res.json({ success: true, snapshot });
+  } catch (err) {
+    console.error('POST /api/metrics/snapshot error:', err);
+    res.status(500).json({ success: false, error: 'Failed to take snapshot' });
+  }
+});
+
 // =============================================
 // Static files & SPA fallback (AFTER API routes)
 // =============================================
@@ -282,6 +420,17 @@ app.get('/app*', (req, res) => {
 if (!process.env.VERCEL) {
   app.listen(port, () => {
     console.log(`GreenLedger running on port ${port}`);
+
+    // Flush visitor count to DB every hour
+    setInterval(flushVisitors, 60 * 60 * 1000);
+    console.log('[Metrics] Hourly visitor flush scheduled');
+
+    // Take daily snapshot every 24 hours (also runs at startup to ensure today has a row)
+    takeDailySnapshot().catch(err => console.error('[Metrics] Startup snapshot error:', err.message));
+    setInterval(() => {
+      takeDailySnapshot().catch(err => console.error('[Metrics] Scheduled snapshot error:', err.message));
+    }, 24 * 60 * 60 * 1000);
+    console.log('[Metrics] Daily snapshot scheduler started');
   });
 }
 
