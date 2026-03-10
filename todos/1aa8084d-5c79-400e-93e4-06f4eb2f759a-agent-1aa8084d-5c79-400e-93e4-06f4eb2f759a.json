@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Create metrics table migration",
+    "status": "completed",
+    "activeForm": "Creating metrics table migration"
+  },
+  {
+    "content": "Add visitor tracking middleware + in-memory counter + metrics endpoints + cron jobs to server.js",
+    "status": "completed",
+    "activeForm": "Updating server.js with metrics infrastructure"
+  },
+  {
+    "content": "Push to remote and verify",
+    "status": "in_progress",
+    "activeForm": "Pushing and verifying"
+  }
+]
