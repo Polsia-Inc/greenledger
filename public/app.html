@@ -344,6 +344,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
         await loadSourceTypes();
         await loadCompanies();
+        // Restore previously selected company so emissions survive page refresh
+        const savedId = localStorage.getItem('selectedCompanyId');
+        if (savedId && !currentCompany) {
+            await selectCompany(parseInt(savedId, 10));
+        }
     });
 
     // Toast
@@ -443,6 +448,7 @@
             const res = await fetch(`/api/companies/${id}`);
             const data = await res.json();
             currentCompany = data.company;
+            localStorage.setItem('selectedCompanyId', currentCompany.id);
             populateCompanyForm(currentCompany);
             toast(`Selected: ${currentCompany.name}`);
             // Mark step 1 done
@@ -484,6 +490,7 @@
             const data = await res.json();
             if (data.company) {
                 currentCompany = data.company;
+                localStorage.setItem('selectedCompanyId', currentCompany.id);
                 status.textContent = 'Saved!';
                 toast('Company profile saved');
                 loadCompanies();
