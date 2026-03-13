@@ -446,7 +446,13 @@
     async function selectCompany(id) {
         try {
             const res = await fetch(`/api/companies/${id}`);
+            if (!res.ok) {
+                // Company doesn't belong to this session — clear stale ID
+                localStorage.removeItem('selectedCompanyId');
+                return;
+            }
             const data = await res.json();
+            if (!data.company) { localStorage.removeItem('selectedCompanyId'); return; }
             currentCompany = data.company;
             localStorage.setItem('selectedCompanyId', currentCompany.id);
             populateCompanyForm(currentCompany);

@@ -1,0 +1,22 @@
+[
+  {
+    "content": "Add session_id migration for companies table",
+    "status": "completed",
+    "activeForm": "Adding session_id migration"
+  },
+  {
+    "content": "Add cookie-parser dependency",
+    "status": "completed",
+    "activeForm": "Adding cookie-parser"
+  },
+  {
+    "content": "Update server.js with session middleware + route guards",
+    "status": "completed",
+    "activeForm": "Updating server.js"
+  },
+  {
+    "content": "Push to remote and verify",
+    "status": "in_progress",
+    "activeForm": "Pushing to remote"
+  }
+]

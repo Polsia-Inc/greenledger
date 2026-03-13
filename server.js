@@ -1,4 +1,6 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const { randomUUID } = require('crypto');
 const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
@@ -25,6 +27,37 @@ const pool = new Pool({
 
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// =============================================
+// Session middleware — anonymous UUID per browser
+// =============================================
+const SESSION_COOKIE = 'gl_session';
+const SESSION_MAX_AGE = 365 * 24 * 60 * 60 * 1000; // 1 year in ms
+
+app.use((req, res, next) => {
+  let sid = req.cookies[SESSION_COOKIE];
+  if (!sid || !/^[0-9a-f-]{36}$/.test(sid)) {
+    sid = randomUUID();
+    res.cookie(SESSION_COOKIE, sid, {
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: SESSION_MAX_AGE,
+      secure: !!(process.env.RENDER || process.env.NODE_ENV === 'production'),
+    });
+  }
+  req.sessionId = sid;
+  next();
+});
+
+// Helper: check company belongs to this session (returns company row or null)
+async function getOwnedCompany(companyId, sessionId) {
+  const r = await pool.query(
+    'SELECT * FROM companies WHERE id = $1 AND session_id = $2',
+    [companyId, sessionId]
+  );
+  return r.rows[0] || null;
+}
 
 // =============================================
 // In-memory visitor counter (flushed hourly)
@@ -138,9 +171,9 @@ app.post('/api/companies', async (req, res) => {
       return res.status(400).json({ error: 'Company name and financial year are required' });
     }
     const result = await pool.query(
-      `INSERT INTO companies (name, abn, industry, employee_count, financial_year, address, contact_email, contact_name)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [name, abn || null, industry || null, employee_count || null, financial_year, address || null, contact_email || null, contact_name || null]
+      `INSERT INTO companies (name, abn, industry, employee_count, financial_year, address, contact_email, contact_name, session_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [name, abn || null, industry || null, employee_count || null, financial_year, address || null, contact_email || null, contact_name || null, req.sessionId]
     );
     res.json({ company: result.rows[0] });
   } catch (err) {
@@ -151,7 +184,10 @@ app.post('/api/companies', async (req, res) => {
 
 app.get('/api/companies', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM companies ORDER BY created_at DESC');
+    const result = await pool.query(
+      'SELECT * FROM companies WHERE session_id = $1 ORDER BY created_at DESC',
+      [req.sessionId]
+    );
     res.json({ companies: result.rows });
   } catch (err) {
     console.error('List companies error:', err);
@@ -161,7 +197,10 @@ app.get('/api/companies', async (req, res) => {
 
 app.get('/api/companies/:id', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM companies WHERE id = $1', [req.params.id]);
+    const result = await pool.query(
+      'SELECT * FROM companies WHERE id = $1 AND session_id = $2',
+      [req.params.id, req.sessionId]
+    );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Company not found' });
     res.json({ company: result.rows[0] });
   } catch (err) {
@@ -176,7 +215,10 @@ app.post('/api/companies/:companyId/emissions', async (req, res) => {
     const { companyId } = req.params;
     const items = Array.isArray(req.body) ? req.body : [req.body];
 
-    const companyCheck = await pool.query('SELECT id FROM companies WHERE id = $1', [companyId]);
+    const companyCheck = await pool.query(
+      'SELECT id FROM companies WHERE id = $1 AND session_id = $2',
+      [companyId, req.sessionId]
+    );
     if (companyCheck.rows.length === 0) return res.status(404).json({ error: 'Company not found' });
 
     const inserted = [];
@@ -206,6 +248,8 @@ app.post('/api/companies/:companyId/emissions', async (req, res) => {
 
 app.get('/api/companies/:companyId/emissions', async (req, res) => {
   try {
+    const company = await getOwnedCompany(req.params.companyId, req.sessionId);
+    if (!company) return res.status(404).json({ error: 'Company not found' });
     const result = await pool.query(
       'SELECT * FROM emissions_data WHERE company_id = $1 ORDER BY category, source_type',
       [req.params.companyId]
@@ -219,7 +263,14 @@ app.get('/api/companies/:companyId/emissions', async (req, res) => {
 
 app.delete('/api/emissions/:id', async (req, res) => {
   try {
-    await pool.query('DELETE FROM emissions_data WHERE id = $1', [req.params.id]);
+    // Only delete if the emission belongs to a company owned by this session
+    const result = await pool.query(
+      `DELETE FROM emissions_data
+       WHERE id = $1
+         AND company_id IN (SELECT id FROM companies WHERE session_id = $2)`,
+      [req.params.id, req.sessionId]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Emission not found' });
     res.json({ success: true });
   } catch (err) {
     console.error('Delete emission error:', err);
@@ -232,7 +283,10 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
   try {
     const { companyId } = req.params;
 
-    const companyResult = await pool.query('SELECT * FROM companies WHERE id = $1', [companyId]);
+    const companyResult = await pool.query(
+      'SELECT * FROM companies WHERE id = $1 AND session_id = $2',
+      [companyId, req.sessionId]
+    );
     if (companyResult.rows.length === 0) return res.status(404).json({ error: 'Company not found' });
     const company = companyResult.rows[0];
 
@@ -302,6 +356,8 @@ app.post('/api/companies/:companyId/reports/generate', async (req, res) => {
 
 app.get('/api/companies/:companyId/reports', async (req, res) => {
   try {
+    const company = await getOwnedCompany(req.params.companyId, req.sessionId);
+    if (!company) return res.status(404).json({ error: 'Company not found' });
     const result = await pool.query(
       `SELECT id, title, financial_year, status, total_scope1, total_scope2, total_scope3, total_emissions, generated_at, created_at
        FROM reports WHERE company_id = $1 ORDER BY created_at DESC`,
@@ -316,7 +372,12 @@ app.get('/api/companies/:companyId/reports', async (req, res) => {
 
 app.get('/api/reports/:id', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM reports WHERE id = $1', [req.params.id]);
+    const result = await pool.query(
+      `SELECT r.* FROM reports r
+       JOIN companies c ON c.id = r.company_id
+       WHERE r.id = $1 AND c.session_id = $2`,
+      [req.params.id, req.sessionId]
+    );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Report not found' });
     res.json({ report: result.rows[0] });
   } catch (err) {
@@ -327,7 +388,12 @@ app.get('/api/reports/:id', async (req, res) => {
 
 app.get('/api/reports/:id/html', async (req, res) => {
   try {
-    const result = await pool.query('SELECT report_html, status FROM reports WHERE id = $1', [req.params.id]);
+    const result = await pool.query(
+      `SELECT r.report_html, r.status FROM reports r
+       JOIN companies c ON c.id = r.company_id
+       WHERE r.id = $1 AND c.session_id = $2`,
+      [req.params.id, req.sessionId]
+    );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Report not found' });
     if (result.rows[0].status !== 'completed') return res.status(400).json({ error: 'Report not ready yet' });
     res.type('html').send(result.rows[0].report_html);
