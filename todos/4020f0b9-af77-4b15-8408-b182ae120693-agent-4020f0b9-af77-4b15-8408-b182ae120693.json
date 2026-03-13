@@ -1,0 +1,7 @@
+[
+  {
+    "content": "Persist selectedCompanyId to localStorage and auto-restore on load",
+    "status": "in_progress",
+    "activeForm": "Fixing session restore for selected company"
+  }
+]
