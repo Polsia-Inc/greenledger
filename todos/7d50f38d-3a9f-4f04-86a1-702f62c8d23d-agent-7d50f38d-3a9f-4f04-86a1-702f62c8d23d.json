@@ -1,0 +1,37 @@
+[
+  {
+    "content": "Add OG meta tags (og:title, og:description, og:image, Twitter card)",
+    "status": "completed",
+    "activeForm": "Adding OG meta tags"
+  },
+  {
+    "content": "Upgrade hero CTA + compliance deadline countdown",
+    "status": "completed",
+    "activeForm": "Upgrading hero CTA"
+  },
+  {
+    "content": "Add trust signals + value comparison vs competitors",
+    "status": "completed",
+    "activeForm": "Adding trust signals"
+  },
+  {
+    "content": "Add email lead capture form + /api/waitlist endpoint",
+    "status": "completed",
+    "activeForm": "Adding email lead capture form"
+  },
+  {
+    "content": "Add Made in Australia badge + mobile polish",
+    "status": "completed",
+    "activeForm": "Adding Made in Australia badge"
+  },
+  {
+    "content": "Create OG image asset",
+    "status": "completed",
+    "activeForm": "Creating OG image asset"
+  },
+  {
+    "content": "Push to remote",
+    "status": "in_progress",
+    "activeForm": "Pushing to remote"
+  }
+]
