@@ -398,6 +398,42 @@ app.post('/api/metrics/snapshot', async (req, res) => {
   }
 });
 
+// POST /api/waitlist — lead capture from landing page
+app.post('/api/waitlist', async (req, res) => {
+  try {
+    const { email, source } = req.body;
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ success: false, error: 'Valid email required' });
+    }
+    const emailClean = email.trim().toLowerCase();
+    const sourceClean = source || 'landing_page';
+    // Upsert — ignore duplicates
+    await pool.query(
+      `INSERT INTO waitlist (email, source) VALUES ($1, $2)
+       ON CONFLICT (email) DO UPDATE SET source = EXCLUDED.source, updated_at = NOW()`,
+      [emailClean, sourceClean]
+    );
+    console.log(`[Waitlist] New lead: ${emailClean} (source: ${sourceClean})`);
+    res.json({ success: true, message: 'Added to waitlist' });
+  } catch (err) {
+    console.error('POST /api/waitlist error:', err);
+    res.status(500).json({ success: false, error: 'Failed to add to waitlist' });
+  }
+});
+
+// GET /api/waitlist — admin: list all leads
+app.get('/api/waitlist', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, email, source, created_at FROM waitlist ORDER BY created_at DESC LIMIT 200`
+    );
+    res.json({ success: true, leads: result.rows, count: result.rows.length });
+  } catch (err) {
+    console.error('GET /api/waitlist error:', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch waitlist' });
+  }
+});
+
 // =============================================
 // Static files & SPA fallback (AFTER API routes)
 // =============================================
